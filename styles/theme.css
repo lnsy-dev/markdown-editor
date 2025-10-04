@@ -1,6 +1,3 @@
-
-
-/* CodeMirror editor UI styles */
 .cm-editor {
   background-color: var(--bg-color);
   color: var(--fg-color);
@@ -26,15 +23,8 @@
   text-rendering: optimizeLegibility;
 }
 
-
 .cm-focused .cm-cursor {
   border-left-color: var(--fg-color);
-}
-
-/* Selection layers */
-.cm-selectionBackground,
-.cm-content ::selection {
-  background-color: var(--neutral-bg-color) !important;
 }
 
 .cm-line {
@@ -46,26 +36,19 @@
   text-rendering: optimizeLegibility;
 }
 
-
 .ͼi {
   color: var(--secondary-color);
 }
 .ͼ5 {
   color: var(--code-highlight-color);
 }
-
 .ͼe {
   color: var(--trinary-color);
 }
-
 .ͼ7 {
   font-weight: normal;
   background-color: var(--lighter-neutral-bg-color);
   text-decoration: none;
-}
-
-.cm-activeLine {
-  background-color: var(--neutral-bg-color) !important;
 }
 
 .cm-focused .cm-matchingBracket,
@@ -111,6 +94,7 @@
   background-color: var(--neutral-bg-color);
   font-style: italic;
   transition: color 0.25s ease-in;
+  margin-top: 1px;
 }
 
 .tok-heading:not(.tok-meta) {
@@ -118,15 +102,13 @@
 }
 
 .tok-meta {
-    transition: width 0.5s ease-out;
-
+  transition: width 0.5s ease-out;
 }
 
 .tok-heading.tok-meta {
   color: transparent;
   float: right;
   width: 0px;
-
 }
 
 .cm-activeLine > .tok-heading.tok-meta {
@@ -146,7 +128,6 @@
 .cm-code-fence-line .tok-meta {
   color: transparent;
   transition: color ease-in 0.25s;
-
 }
 
 .cm-activeLine.cm-code-fence-line > .tok-meta {
@@ -251,8 +232,15 @@
 }
 
 .cm-code-fence-line {
-  background-color: var(--md-code-fence-bg, rgba(125,125,125,0.10));
-  border-left: 3px solid var(--code-highlight-color, #475569);
+  background-color: var(--code-background-color-darker, rgba(125,125,125,0.10));
+  font-size: 80%;
+  text-align: right;
+  padding-right: 1em;
+}
+
+.cm-activeLine.cm-code-fence-line {
+  font-size: 100%;
+  text-align: left;
 }
 
 .cm-code-block-line {
@@ -269,8 +257,8 @@
   background-color: var(--md-aside-bg, rgba(253,186,116,0.12));
 }
 
-/* Markdown heading line decorations */
 .cm-line.cm-md-heading {
+  padding-top: 1px;
 }
 .cm-line.cm-md-h1 {
   background-color: var(--highlight-color);
@@ -293,4 +281,3 @@
   background-color: var(--quaternary-color);
   opacity: 0.9;
 }
-

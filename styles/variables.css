@@ -16,11 +16,12 @@
 :root {  
   --bg-color: #FFF8E7;            
   --fg-color: #5b4931;
-  --neutral-bg-color: #d7d0c5;  
+  --darker-neutral-color: #d7d0c5;
+  --neutral-bg-color: #c6cfb4;  
   --lighter-neutral-bg-color: #e8e1d6;
 
   --neutral-fg-color: #5e5550;        
-  --highlight-color: #FE7400;     
+  --highlight-color: yellow;     
   --secondary-color: #564c2e;     
   --trinary-color: #475569; 
   --quaternary-color: #99aabb;  
@@ -28,6 +29,8 @@
   --code-secondary-highlight-color: var(--secondary-color);
   --code-foreground-color: var(--fg-color);
   --code-background-color: var(--neutral-bg-color);
+  --code-background-color-darker: var(--darker-neutral-bg-color);
+
   --code-highlight-color: var(--trinary-color);
   --code-neutral-color: var(--neutral-fg-color);
   --font-size: 1.0rem;
