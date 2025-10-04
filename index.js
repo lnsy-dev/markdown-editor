@@ -1,2 +1,2 @@
 import "./index.css";
-import "./src/example-component.js";
+import "./src/markdown-editor.js";

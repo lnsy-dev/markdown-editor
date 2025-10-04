@@ -1,0 +1,125 @@
+
+
+/* CodeMirror editor UI styles */
+.cm-editor {
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+  outline-color: transparent !important;
+  font-family: var(--body-font-family);
+  font-variant-ligatures: common-ligatures;
+  font-feature-settings: "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+}
+
+.cm-gutters {
+  background-color: var(--trinary-color);
+  color: var(--secondary-color);
+  border: none;
+}
+
+.cm-content {
+  caret-color: var(--fg-color);
+  font-family: var(--body-font-family);
+  font-variant-ligatures: common-ligatures;
+  font-feature-settings: "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+}
+
+
+.cm-focused .cm-cursor {
+  border-left-color: var(--fg-color);
+}
+
+/* Selection layers */
+.cm-selectionBackground,
+.cm-content ::selection {
+  background-color: var(--neutral-bg-color) !important;
+}
+
+.cm-line {
+  font-family: var(--body-font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  font-variant-ligatures: common-ligatures;
+  font-feature-settings: "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+}
+
+
+.ͼi {
+  color: var(--secondary-color);
+}
+.ͼ5 {
+  color: var(--code-highlight-color);
+}
+
+.ͼ7 {
+  font-weight: normal;
+  background-color: var(--lighter-neutral-bg-color);
+  text-decoration: none;
+}
+
+.cm-activeLine {
+  background-color: var(--neutral-bg-color) !important;
+}
+
+.cm-focused .cm-matchingBracket,
+.cm-focused .cm-surround {
+  background-color: var(--trinary-color);
+  color: var(--fg-color);
+}
+
+/* Token styles via classHighlighter */
+.cm-editor .tok-keyword,
+.cm-editor .tok-atom,
+.cm-editor .tok-number,
+.cm-editor .tok-tagName,
+.cm-editor .tok-attributeName,
+.cm-editor .tok-definition {
+  color: var(--secondary-color);
+}
+
+.cm-editor .tok-string,
+.cm-editor .tok-attributeValue {
+  color: var(--trinary-color);
+}
+
+.cm-editor .tok-comment,
+.cm-editor .tok-meta {
+  color: var(--neutral-fg-color);
+  font-style: italic;
+}
+
+.cm-editor .tok-variableName,
+.cm-editor .tok-propertyName,
+.cm-editor .tok-bracket {
+  color: var(--fg-color);
+}
+
+.cm-editor .tok-link {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+.cm-editor .tok-heading {
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
+.cm-editor .tok-strong {
+  font-weight: bold;
+}
+
+.cm-editor .tok-emphasis {
+  font-style: italic;
+}
+
+/* Comprehensive ligature support for all text elements */
+.cm-editor,
+.cm-content,
+.cm-line,
+.cm-editor * {
+  font-variant-ligatures: common-ligatures;
+  font-feature-settings: "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+}

@@ -6,34 +6,22 @@
   <title>Project</title>
   <script type="module" src="/main.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
     :root {
-      --primary-hue: 27; /* Original primary hue */  
-      --saturation: 100%;  
-      --lightness: 50%;  
+      --body-font-family: "Fira Code", monospace;
     }
 
     body {
-      background-color: #FFF8E7;
-      max-width: 60em;
-      margin: auto;
-    }
-
-    p {
-      color: var(--tertiary-fg-color);
-    }
-
-    a {
-      color: var(--secondary-fg-color);
-    }
-
-    h1, h2, h3 {
-      color: var(--complementary-color);
+      background-color: var(--bg-color);
+      color: var(--fg-color);
     }
   </style>
+
+
 </head>
 <body>
-
-  <example-component></example-component>
+  <markdown-editor></markdown-editor>
 
 </body>
 </html>
