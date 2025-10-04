@@ -142,6 +142,17 @@
   font-style: italic;
 }
 
+.cm-code-fence-line .tok-meta {
+  color: transparent;
+  transition: color ease-in 0.25s;
+
+}
+
+.cm-activeLine.cm-code-fence-line > .tok-meta {
+  color: var(--secondary-color) !important;
+  width: auto;
+}
+
 /* Autocomplete popup styling */
 .cm-tooltip {
   background-color: var(--bg-color) !important;
