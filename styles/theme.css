@@ -117,6 +117,11 @@
   padding-right: 1.25rem;
 }
 
+.tok-meta {
+    transition: width 0.5s ease-out;
+
+}
+
 .tok-heading.tok-meta {
   color: transparent;
   float: right;
@@ -252,3 +257,29 @@
 .cm-aside-block-line {
   background-color: var(--md-aside-bg, rgba(253,186,116,0.12));
 }
+
+/* Markdown heading line decorations */
+.cm-line.cm-md-heading {
+}
+.cm-line.cm-md-h1 {
+  background-color: var(--highlight-color);
+}
+.cm-line.cm-md-h2 {
+  background-color: var(--secondary-color);
+}
+.cm-line.cm-md-h3 {
+  background-color: var(--trinary-color);
+}
+.cm-line.cm-md-h4 {
+  background-color: var(--quaternary-color);
+  opacity: 0.95;
+}
+.cm-line.cm-md-h5 {
+  background-color: var(--quaternary-color);
+  opacity: 0.9;
+}
+.cm-line.cm-md-h6 {
+  background-color: var(--quaternary-color);
+  opacity: 0.9;
+}
+

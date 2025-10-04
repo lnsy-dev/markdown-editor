@@ -45,6 +45,13 @@ const hrLineHighlighter = ViewPlugin.fromClass(class {
       return m && m[1] ? m[1].toLowerCase() : null;
     };
 
+    // ATX heading detection (#, ##, ... ######)
+    const isAtxHeading = (t) => /^\s{0,3}#{1,6}\s+.+$/.test(t);
+    const atxLevel = (t) => {
+      const m = t.match(/^\s{0,3}(#{1,6})\s+/);
+      return m ? m[1].length : null;
+    };
+
     // Compute state up to the start of each visible range so we know if we're inside a block
     const computeStateUpTo = (pos) => {
       let inCode = false;
@@ -116,6 +123,14 @@ const hrLineHighlighter = ViewPlugin.fromClass(class {
           } else if (isAsideFenceClose(text)) {
             inAside = false;
             curAsideType = null;
+          }
+        }
+
+        // Headings (# .. ######) — decorate whole line per level
+        if (!inCode && isAtxHeading(text)) {
+          const lvl = atxLevel(text);
+          if (lvl) {
+            builder.add(line.from, line.from, lineDeco(`cm-md-heading cm-md-h${lvl}`));
           }
         }
 
