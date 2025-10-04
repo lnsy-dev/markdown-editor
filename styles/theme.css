@@ -108,6 +108,7 @@
 
 .cm-editor .tok-heading {
   color: var(--secondary-color);
+  background-color: var(--neutral-bg-color);
   font-style: italic;
   transition: color 0.25s ease-in;
 }
