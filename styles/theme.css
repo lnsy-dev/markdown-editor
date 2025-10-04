@@ -108,7 +108,26 @@
 
 .cm-editor .tok-heading {
   color: var(--secondary-color);
-  font-weight: bold;
+  background-color: var(--lighter-neutral-bg-color);
+  font-style: italic;
+  transition: color 0.25s ease-in;
+}
+
+.tok-heading:not(.tok-meta) {
+  padding-right: 1.25rem;
+}
+
+.tok-heading.tok-meta {
+  color: transparent;
+  float: right;
+  width: 0px;
+
+}
+
+.cm-activeLine > .tok-heading.tok-meta {
+  color: var(--secondary-color);
+  float: left;
+  width: auto;
 }
 
 .cm-editor .tok-strong {
@@ -202,4 +221,34 @@
   font-variant-ligatures: common-ligatures;
   font-feature-settings: "liga" 1, "calt" 1;
   text-rendering: optimizeLegibility;
+}
+
+/* Markdown line decorations moved from JS to CSS */
+.cm-hr-line {
+  background-color: var(--md-hr-line-bg, rgba(125,125,125,0.12));
+  color: transparent;
+  transition: color 1s ease-in;
+}
+
+.cm-activeLine.cm-hr-line {
+  color: var(--fg-color);
+}
+
+.cm-code-fence-line {
+  background-color: var(--md-code-fence-bg, rgba(125,125,125,0.10));
+  border-left: 3px solid var(--code-highlight-color, #475569);
+}
+
+.cm-code-block-line {
+  background-color: var(--code-background-color, rgba(148,163,184,0.15));
+  color: var(--code-foreground-color, inherit);
+}
+
+.cm-aside-fence-line {
+  background-color: var(--md-aside-fence-bg, rgba(253,186,116,0.18));
+  border-left: 3px solid var(--highlight-color, #FE7400);
+}
+
+.cm-aside-block-line {
+  background-color: var(--md-aside-bg, rgba(253,186,116,0.12));
 }

@@ -154,45 +154,6 @@ class MarkdownEditor extends DataroomElement {
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),
-        // Theme extension to support ligatures
-        EditorView.theme({
-          '&': {
-            fontVariantLigatures: 'common-ligatures',
-            fontFeatureSettings: '"liga" 1, "calt" 1',
-            textRendering: 'optimizeLegibility'
-          },
-          '.cm-content': {
-            fontVariantLigatures: 'common-ligatures',
-            fontFeatureSettings: '"liga" 1, "calt" 1',
-            textRendering: 'optimizeLegibility'
-          },
-          '.cm-line': {
-            fontVariantLigatures: 'common-ligatures',
-            fontFeatureSettings: '"liga" 1, "calt" 1',
-            textRendering: 'optimizeLegibility'
-          },
-          // Style for lines that contain only '---'
-          '.cm-hr-line': {
-            backgroundColor: 'var(--md-hr-line-bg, rgba(125,125,125,0.12))'
-          },
-          // Code fences and code block lines
-          '.cm-code-fence-line': {
-            backgroundColor: 'var(--md-code-fence-bg, rgba(125,125,125,0.10))',
-            borderLeft: '3px solid var(--code-highlight-color, #475569)'
-          },
-          '.cm-code-block-line': {
-            backgroundColor: 'var(--code-background-color, rgba(148,163,184,0.15))',
-            color: 'var(--code-foreground-color, inherit)'
-          },
-          // Aside fences and aside block content
-          '.cm-aside-fence-line': {
-            backgroundColor: 'var(--md-aside-fence-bg, rgba(253,186,116,0.18))',
-            borderLeft: '3px solid var(--highlight-color, #FE7400)'
-          },
-          '.cm-aside-block-line': {
-            backgroundColor: 'var(--md-aside-bg, rgba(253,186,116,0.12))'
-          }
-        }),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             this.dirty = true;
