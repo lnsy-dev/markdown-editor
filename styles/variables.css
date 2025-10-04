@@ -1,0 +1,59 @@
+/*
+  *** begin ascii art ***
+  
+   _    _____    ____  _______    ____  __    ___________
+  | |  / /   |  / __ \/  _/   |  / __ )/ /   / ____/ ___/
+  | | / / /| | / /_/ // // /| | / __  / /   / __/  \__ \
+  | |/ / ___ |/ _, _// // ___ |/ /_/ / /___/ /___ ___/ /
+  |___/_/  |_/_/ |_/___/_/  |_/_____/_____/_____//____/
+  
+  *** end ascii art ***
+  
+  Most aesthethic options should live here for adjustment
+*/
+
+
+:root {  
+  --primary-hue: 27; /* Original primary hue */  
+  --saturation: 100%;  
+  --lightness: 50%;  
+
+  --primary-color: hsl(var(--primary-hue), var(--saturation), var(--lightness));  
+
+
+  /* Calculate complementary hue */
+  --complementary-hue: calc(var(--primary-hue) + 180);  
+  --complementary-color: hsl(var(--complementary-hue), var(--saturation), var(--lightness));  
+
+  /* Tertiary colors with different saturation levels */
+  --tertiary-hue-1: calc(var(--primary-hue) + 30); /* 1st tertiary hue */
+  --tertiary-hue-2: calc(var(--primary-hue) - 30); /* 2nd tertiary hue */
+  
+  --tertiary-color-1: hsl(var(--tertiary-hue-1), calc(var(--saturation) - 15%), var(--lightness));  
+  --tertiary-color-2: hsl(var(--tertiary-hue-2), calc(var(--saturation) - 20%), var(--lightness));
+
+  /* Secondary colors example */
+  --secondary-fg-color: color-mix(in srgb, var(--primary-color) 70%, var(--tertiary-color-1));
+  --secondary-bg-color: color-mix(in srgb, var(--primary-color) 90%, var(--tertiary-color-2));
+  
+  /* Neutral and highlight colors */
+  --highlight-color: var(--secondary-bg-color);
+  --neutral-color: color-mix(in srgb, var(--primary-color), var(--tertiary-color-1));
+
+  /* Extended tertiary for more background/fill options */
+  --tertiary-fg-color: color-mix(in srgb, var(--primary-color) 50%, var(--tertiary-color-2));
+  --tertiary-bg-color: color-mix(in srgb, var(--primary-color) 30%, black);
+
+  /* Quaternary colors with adjusted saturation */
+  --quaternary-fg-color: color-mix(in srgb, hsl(var(--primary-hue), 40%, var(--lightness)) 50%, var(--tertiary-color-2));
+  --quaternary-bg-color: color-mix(in srgb, hsl(var(--primary-hue), 40%, var(--lightness)) 10%, var(--tertiary-color-1));
+
+  /* Status colors with changes in saturation and hue */
+  --error-color: hsl(calc(var(--primary-hue) + 60), calc(var(--saturation) - 25%), calc(var(--lightness) - 15%));
+  --warning-color: hsl(calc(var(--primary-hue) + 45), calc(var(--saturation) - 20%), var(--lightness));
+  --confirm-color: hsl(calc(var(--primary-hue) - 120), calc(var(--saturation) - 15%), calc(var(--lightness) - 15%));
+
+  /* Other colors */
+  --border-color: var(--neutral-color);
+
+}

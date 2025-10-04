@@ -1,0 +1,56 @@
+/*
+
+  *** begin ascii art ***
+  
+            CCCCCCCCCCCCC   SSSSSSSSSSSSSSS    SSSSSSSSSSSSSSS
+         CCC::::::::::::C SS:::::::::::::::S SS:::::::::::::::S
+       CC:::::::::::::::CS:::::SSSSSS::::::SS:::::SSSSSS::::::S
+      C:::::CCCCCCCC::::CS:::::S     SSSSSSSS:::::S     SSSSSSS
+     C:::::C       CCCCCCS:::::S            S:::::S
+    C:::::C              S:::::S            S:::::S
+    C:::::C               S::::SSSS          S::::SSSS
+    C:::::C                SS::::::SSSSS      SS::::::SSSSS
+    C:::::C                  SSS::::::::SS      SSS::::::::SS
+    C:::::C                     SSSSSS::::S        SSSSSS::::S
+    C:::::C                          S:::::S            S:::::S
+     C:::::C       CCCCCC            S:::::S            S:::::S
+      C:::::CCCCCCCC::::CSSSSSSS     S:::::SSSSSSSS     S:::::S
+       CC:::::::::::::::CS::::::SSSSSS:::::SS::::::SSSSSS:::::S
+         CCC::::::::::::CS:::::::::::::::SS S:::::::::::::::SS
+            CCCCCCCCCCCCC SSSSSSSSSSSSSSS    SSSSSSSSSSSSSSS
+                            The CSS file
+                            
+  *** end ascii art ***
+  
+  A lot of people get into months long javascript framework
+  boondoggles for reasons they could have solved in 5 minutes 
+  fiddling with the humble CSS file.
+  
+  The penultimate best CSS framework is the one where every design 
+  meeting you, the HTML/CSS Engineer (paid more than any of the 
+  Javascript Jocks) are rolling your eyes at the cravat wearing 
+  designer and sarcastically holding up a sticky note that says: 
+  "What about the standards, bro?"
+  
+  But the absolute best HTML/CSS Framework is the one where the
+  designers are writing the CSS and HTML. Drop photoshop, drop 
+  whatever flavor of the week closed-source Mac only garbage you've 
+  been sending me that is just bad SVG and write some HTML and CSS. 
+  
+  Design is about application of material facts (and yes, 
+  HTML/CSS is a material fact on screen in browser), so start 
+  applying the materials.
+  
+  A lot of people think CSS folk aren't Engineers, or that 
+  Designers can't become good engineers, but I know better. A lot 
+  of you designers and CSS pushers are already better engineers 
+  than the Javascript Jocks around you.
+  
+  I know. I see you. Here's where you wow them.
+  
+  LNSY
+
+*/
+
+
+@import "./styles/variables.css";

@@ -1,0 +1,44 @@
+{
+  "name": "pochade-js",
+  "version": "0.4.0",
+  "description": "A context engineering boilerplate for generating custom HTML Elements",
+  "main": "dist/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lnsy-dev/pochade-js.git"
+  },
+  "keywords": [
+    "Context",
+    "Engineering",
+    "Vanilla",
+    "Js"
+  ],
+  "author": "LNSY",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/lnsy-dev/pochade-js/issues"
+  },
+  "homepage": "https://github.com/lnsy-dev/pochade-js#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "rspack serve",
+    "build": "rspack build"
+  },
+  "dependencies": {
+    "dataroom-js": "^0.6.0"
+  },
+  "devDependencies": {
+    "@rspack/cli": "^1.5.6",
+    "@rspack/core": "^1.5.6",
+    "@rspack/dev-server": "^1.1.4",
+    "css-loader": "^7.1.2",
+    "dotenv": "^17.2.2",
+    "style-loader": "^4.0.0"
+  },
+  "files": [
+    "dist/main.js",
+    "index.css",
+    "styles/variables.css",
+    "src/"
+  ]
+}
