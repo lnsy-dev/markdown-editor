@@ -9,6 +9,7 @@
   font-variant-ligatures: common-ligatures;
   font-feature-settings: "liga" 1, "calt" 1;
   text-rendering: optimizeLegibility;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .cm-gutters {
@@ -51,6 +52,10 @@
 }
 .ͼ5 {
   color: var(--code-highlight-color);
+}
+
+.ͼe {
+  color: var(--trinary-color);
 }
 
 .ͼ7 {
@@ -112,6 +117,81 @@
 
 .cm-editor .tok-emphasis {
   font-style: italic;
+}
+
+/* Autocomplete popup styling */
+.cm-tooltip {
+  background-color: var(--bg-color) !important;
+  border: 1px solid var(--neutral-bg-color) !important;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(91, 73, 49, 0.15);
+  font-family: var(--body-font-family);
+  font-size: var(--font-size);
+}
+
+.cm-completionList {
+  background-color: var(--bg-color) !important;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.cm-completionOption {
+  padding: 6px 12px !important;
+  color: var(--fg-color) !important;
+  background-color: transparent !important;
+  border: none !important;
+  font-family: var(--body-font-family) !important;
+  font-size: var(--font-size) !important;
+  line-height: var(--line-height) !important;
+  cursor: pointer;
+  border-radius: 2px;
+  margin: 1px;
+}
+
+.cm-completionOption:hover,
+.cm-completionOption[aria-selected] {
+  background-color: var(--neutral-bg-color) !important;
+  color: var(--fg-color) !important;
+}
+
+.cm-completionOption[aria-selected] {
+  background-color: var(--lighter-neutral-bg-color) !important;
+}
+
+/* Autocomplete icons/labels */
+.cm-completionIcon {
+  color: var(--secondary-color) !important;
+  opacity: 0.8;
+}
+
+.cm-completionLabel {
+  color: var(--fg-color) !important;
+  font-weight: normal;
+}
+
+.cm-completionDetail {
+  color: var(--neutral-fg-color) !important;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+/* Scrollbar styling for completion list */
+.cm-completionList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cm-completionList::-webkit-scrollbar-track {
+  background: var(--lighter-neutral-bg-color);
+  border-radius: 3px;
+}
+
+.cm-completionList::-webkit-scrollbar-thumb {
+  background: var(--neutral-bg-color);
+  border-radius: 3px;
+}
+
+.cm-completionList::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
 }
 
 /* Comprehensive ligature support for all text elements */

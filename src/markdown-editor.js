@@ -1,8 +1,10 @@
 import { EditorView, basicSetup, minimalSetup } from "codemirror";
-import { lineNumbers, highlightActiveLine, EditorView as EV } from "@codemirror/view";
+import { lineNumbers, highlightActiveLine, EditorView as EV, keymap } from "@codemirror/view";
 import { markdown } from "@codemirror/lang-markdown";
+import { html } from "@codemirror/lang-html";
 import { syntaxHighlighting } from "@codemirror/language";
 import { classHighlighter } from "@lezer/highlight";
+import { autocompletion, completionKeymap } from "@codemirror/autocomplete";
 
 // Load CSS variables and theme styles
 import "../styles/variables.css";
@@ -22,6 +24,12 @@ class MarkdownEditor extends DataroomElement {
         minimalSetup,
         // Initialize the Markdown language support
         markdown(),
+        // Enable HTML language support for embedded HTML
+        html(),
+        // Enable autocompletion with HTML completions
+        autocompletion(),
+        // Add completion keybindings (Ctrl-Space to trigger)
+        keymap.of(completionKeymap),
         // Highlight the currently active line
         highlightActiveLine(),
         
