@@ -147,9 +147,34 @@ const hrLineHighlighter = ViewPlugin.fromClass(class {
 
 class MarkdownEditor extends DataroomElement {
   async initialize(){
-    const initialDoc = "";
-    // Create a container inside the element to host the editor view
+    // Determine initial document from any light DOM content provided to the element
+    let initialDoc = "";
+    try {
+      // Pull text content (not HTML) so users can place raw Markdown between tags
+      const raw = this.textContent ?? "";
+      // Normalize line endings
+      const normalized = raw.replace(/\r\n?/g, "\n");
+      // Remove a single leading newline commonly introduced by HTML formatting
+      const withoutLeading = normalized.startsWith("\n") ? normalized.slice(1) : normalized;
+      // Dedent common indentation across non-empty lines (so pretty-printed HTML doesn't affect content)
+      const lines = withoutLeading.split("\n");
+      const nonEmpty = lines.filter(l => l.trim().length > 0);
+      const indent = nonEmpty.length ? Math.min(...nonEmpty.map(l => (l.match(/^\s*/)?.[0].length ?? 0))) : 0;
+      const dedented = indent > 0 ? lines.map(l => l.slice(Math.min(indent, l.length))).join("\n") : withoutLeading;
+      const cleaned = dedented.replace(/\s+$/, ""); // Trim only trailing whitespace at end of content block
+      if (cleaned.trim().length > 0) {
+        initialDoc = cleaned;
+      }
+    } catch (_) {
+      // Swallow and fall back to empty document
+      initialDoc = "";
+    }
 
+    // Clear any existing child nodes (light DOM content) before mounting the editor view
+    // so that the initial text doesn't render alongside the editor widget.
+    this.innerHTML = "";
+
+    // Create the editor view
     this.view = new EditorView({
       parent: this,
       doc: initialDoc,
