@@ -1,3 +1,9 @@
+markdown-editor {
+  margin: auto;
+  display: block;
+  overflow: hidden;
+}
+
 .cm-editor {
   background-color: var(--bg-color);
   color: var(--fg-color);
