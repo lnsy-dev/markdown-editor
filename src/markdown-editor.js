@@ -215,38 +215,6 @@ class MarkdownEditor extends DataroomElement {
         // Highlight the currently active line
         highlightActiveLine(),
         // Style active line and selection using CSS variables from styles/variables.css
-        EditorView.theme({
-          // Ensure correct layer ordering: content under selection layer
-          ".cm-content": {
-            position: "relative",
-            zIndex: 0
-          },
-          ".cm-selectionLayer": {
-            // Must be above .cm-content backgrounds and line decorations
-            zIndex: 2
-          },
-          // Active line affordance: subtle left inset bar instead of solid fill
-          ".cm-activeLine": {
-            backgroundColor: "transparent",
-            boxShadow: "inset 2px 0 0 0 var(--neutral-bg-color)"
-          },
-          ".cm-activeLineGutter": {
-            backgroundColor: "transparent"
-          },
-
-          // Selection colors (both focused and unfocused)
-          ".cm-selectionBackground": {
-            backgroundColor: "var(--highlight-color) !important"
-          },
-          "&.cm-focused .cm-selectionBackground": {
-            backgroundColor: "var(--highlight-color) !important"
-          },
-
-          // Native selection fallback inside the editor content (in case drawSelection is off)
-          ".cm-content ::selection": {
-            backgroundColor: "var(--highlight-color)"
-          }
-        }),
         // Draw the selection layer so our theme colors apply consistently
         drawSelection(),
         // Custom: highlight lines that are only '---'
