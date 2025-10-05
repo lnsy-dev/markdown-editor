@@ -16,14 +16,14 @@
 :root {  
   --bg-color: #FFF8E7;            
   --fg-color: #5b4931;
-  --darker-neutral-color: #d7d0c5;
-  --neutral-bg-color: #c6cfb4;  
+  --darker-neutral-color: #a8a297;
+  --neutral-bg-color: #d7d0c5;  
   --lighter-neutral-bg-color: #e8e1d6;
 
   --neutral-fg-color: #5e5550;        
   --highlight-color: yellow;     
   --secondary-color: #564c2e;     
-  --trinary-color: #475569; 
+  --trinary-color: #2a3442; 
   --quaternary-color: #99aabb;  
   --link-color: var(--highlight-color);
   --code-secondary-highlight-color: var(--secondary-color);

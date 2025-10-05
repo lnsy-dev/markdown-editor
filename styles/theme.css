@@ -89,6 +89,10 @@
   text-decoration: underline;
 }
 
+.cm-editor .tok-labelName {
+  padding-right: 1em;
+}
+
 .cm-editor .tok-heading {
   color: var(--secondary-color);
   background-color: var(--neutral-bg-color);
@@ -261,11 +265,12 @@
   padding-top: 1px;
 }
 .cm-line.cm-md-h1 {
-  background-color: var(--highlight-color);
+  background-color: var(--darker-neutral-color);
 }
 .cm-line.cm-md-h2 {
   background-color: var(--secondary-color);
 }
+
 .cm-line.cm-md-h3 {
   background-color: var(--trinary-color);
 }
@@ -279,5 +284,5 @@
 }
 .cm-line.cm-md-h6 {
   background-color: var(--quaternary-color);
-  opacity: 0.9;
+  opacity: 0.8;
 }
