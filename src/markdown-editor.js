@@ -6,7 +6,7 @@ import { html } from "@codemirror/lang-html";
 import { syntaxHighlighting, LanguageDescription } from "@codemirror/language";
 import { classHighlighter } from "@lezer/highlight";
 import { autocompletion, completionKeymap } from "@codemirror/autocomplete";
-import { RangeSetBuilder } from "@codemirror/state";
+import { RangeSetBuilder, EditorSelection } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 
 // Load CSS variables and theme styles
@@ -145,6 +145,18 @@ const hrLineHighlighter = ViewPlugin.fromClass(class {
   decorations: v => v.decorations
 });
 
+// Insert two spaces when Tab is pressed
+const insertTwoSpaces = (view) => {
+  const tr = view.state.changeByRange(range => {
+    return {
+      changes: { from: range.from, to: range.to, insert: "  " },
+      range: EditorSelection.cursor(range.from + 2)
+    };
+  });
+  view.dispatch(tr, { scrollIntoView: true });
+  return true;
+};
+
 class MarkdownEditor extends DataroomElement {
   async initialize(){
     // Determine initial document from any light DOM content provided to the element
@@ -198,6 +210,8 @@ class MarkdownEditor extends DataroomElement {
         autocompletion(),
         // Add completion keybindings (Ctrl-Space to trigger)
         keymap.of(completionKeymap),
+        // Bind Tab to insert two spaces instead of a tab character
+        keymap.of([{ key: "Tab", run: insertTwoSpaces }]),
         // Highlight the currently active line
         highlightActiveLine(),
         // Style active line and selection using CSS variables from styles/variables.css
