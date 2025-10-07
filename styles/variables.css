@@ -14,18 +14,33 @@
 
 
 @layer defaults {
-:root {  
-  --bg-color: #FFF8E7;            
-  --fg-color: #5b4931;
-  --darker-neutral-color: #a8a297;
-  --neutral-bg-color: #d7d0c5;  
-  --lighter-neutral-bg-color: #e8e1d6;
 
-  --neutral-fg-color: #5e5550;        
-  --highlight-color: yellow;     
-  --secondary-color: #564c2e;     
-  --trinary-color: #2a3442; 
-  --quaternary-color: #99aabb;  
+
+:root {
+  --bg: #FFF8E7;
+  --fg: #5b4931;
+  --highlight: #c2c2c2;
+  --error-color: #ff0000;
+  --warning-color: #ffa500;
+  --confirm-color: #008000;
+  --color-1-muted: #a8a297;
+  --color-1: #d7d0c5;
+  --color-1-brighter: #e8e1d6;
+  --color-2: #5e5550;
+  --color-3: #564c2e;
+  --color-4: #99aabb;
+
+  --bg-color: var(--bg);            
+  --fg-color: var(--fg);
+  --darker-neutral-color: var(--color-1-muted);
+  --neutral-bg-color: var(--color-1);  
+  --lighter-neutral-bg-color: var(--color-1-brighter);
+
+  --neutral-fg-color: var(--color-1-muted);        
+  --highlight-color: var(--highlight);     
+  --secondary-color: var(--color-2);     
+  --trinary-color: var(--color-3); 
+  --quaternary-color: var(--color-4);  
   --link-color: var(--highlight-color);
   --code-secondary-highlight-color: var(--secondary-color);
   --code-foreground-color: var(--fg-color);
@@ -36,5 +51,9 @@
   --code-neutral-color: var(--neutral-fg-color);
   --font-size: 1.0rem;
   --line-height: 1.618rem;
+
+
+
 }
+
 }
