@@ -1,4 +1,4 @@
-# Markdown Editor Web Component
+# Markdown Editor Web Component (@lnsy/markdown-editor)
 
 A lightweight Markdown editor custom element built on CodeMirror 6. It registers the <markdown-editor> tag when imported and is themeable via CSS variables.
 
@@ -14,14 +14,20 @@ Highlights:
 
 ## Quick start (rspack)
 
-Install dependencies and run the dev server:
+Install the package:
+
+```bash
+npm install @lnsy/markdown-editor
+```
+
+For local development in this repo, install dependencies and run the dev server:
 
 ```bash
 npm install
 npm run start
 ```
 
-By default this serves index.html and emits dist/main.min.js. Open http://localhost:3000.
+By default this serves index.html and emits dist/markdown-editor.min.js. Open http://localhost:3000.
 
 Build for production:
 
@@ -29,12 +35,12 @@ Build for production:
 npm run build
 ```
 
-This writes optimized assets to dist/ (e.g., dist/main.min.js).
+This writes optimized assets to dist/ (e.g., dist/markdown-editor.min.js).
 
 Optional .env customization:
 
 ```ini
-# Output file name (defaults to main.min.js)
+# Output file name (defaults to markdown-editor.min.js)
 OUTPUT_FILE_NAME=my-app.js
 # Dev server port (defaults to 3000)
 PORT=5173
@@ -54,7 +60,7 @@ The component is automatically registered when you import the bundle. You can ei
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Markdown Editor</title>
-    <script type="module" src="./dist/main.min.js"></script>
+    <script type="module" src="./dist/markdown-editor.min.js"></script>
   </head>
   <body>
     <markdown-editor>
@@ -238,7 +244,7 @@ The theme also respects a body font variable if you provide it:
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Demo</title>
-    <script type="module" src="/main.min.js"></script>
+    <script type="module" src="/markdown-editor.min.js"></script>
     <style>
       :root {
         --body-font-family: "Fira Code", monospace;

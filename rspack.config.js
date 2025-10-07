@@ -1,13 +1,21 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
-const path = require('path');
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const isProd = process.env.NODE_ENV === 'production';
+
+export default {
   entry: './index.js',
-  mode: 'development',
+  mode: isProd ? 'production' : 'development',
   output: {
-    filename: process.env.OUTPUT_FILE_NAME || 'main.min.js',
+    filename: process.env.OUTPUT_FILE_NAME || 'markdown-editor.min.js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
   },
   devServer: {
     static: {
@@ -28,7 +36,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
-              sourceMap: true,
+              sourceMap: !isProd,
             },
           },
         ],

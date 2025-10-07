@@ -1,28 +1,39 @@
 {
-  "name": "pochade-js",
-  "version": "0.4.0",
-  "description": "A context engineering boilerplate for generating custom HTML Elements",
-  "main": "dist/main.js",
+  "name": "@lnsy/markdown-editor",
+  "version": "0.1.0",
+  "description": "A lightweight Markdown editor Web Component built on CodeMirror 6",
+  "type": "module",
+  "main": "dist/markdown-editor.min.js",
+  "module": "dist/markdown-editor.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/markdown-editor.min.js",
+      "default": "./dist/markdown-editor.min.js"
+    }
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lnsy-dev/pochade-js.git"
+    "url": "git+https://github.com/DATAROOM-NETWORK/markdown-editor.git"
   },
   "keywords": [
-    "Context",
-    "Engineering",
-    "Vanilla",
-    "Js"
+    "markdown",
+    "editor",
+    "web-component",
+    "codemirror",
+    "lnsy"
   ],
   "author": "LNSY",
   "license": "Unlicense",
   "bugs": {
-    "url": "https://github.com/lnsy-dev/pochade-js/issues"
+    "url": "https://github.com/DATAROOM-NETWORK/markdown-editor/issues"
   },
-  "homepage": "https://github.com/lnsy-dev/pochade-js#readme",
+  "homepage": "https://github.com/DATAROOM-NETWORK/markdown-editor#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rspack serve",
-    "build": "rspack build"
+    "start": "NODE_ENV=development rspack serve",
+    "build": "NODE_ENV=production rspack build",
+    "verify:pack": "npm pack --dry-run",
+    "prepublishOnly": "npm run build && npm run verify:pack"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.19.0",
@@ -45,9 +56,13 @@
     "style-loader": "^4.0.0"
   },
   "files": [
-    "dist/main.js",
-    "index.css",
-    "styles/variables.css",
-    "src/"
-  ]
+    "dist/",
+    "styles/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

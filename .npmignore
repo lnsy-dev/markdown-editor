@@ -2,8 +2,6 @@ node_modules
 rspack.config.js
 .env.example
 GEMINI.md
-LICENSE
-README.md
 package-lock.json
 prompts
 
