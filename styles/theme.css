@@ -215,22 +215,23 @@ markdown-editor {
   font-size: 0.9em;
 }
 
-/* Scrollbar styling for completion list */
-.cm-completionList::-webkit-scrollbar {
+/* Scrollbar styling */
+::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
-.cm-completionList::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: var(--lighter-neutral-bg-color);
   border-radius: 3px;
 }
 
-.cm-completionList::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: var(--neutral-bg-color);
   border-radius: 3px;
 }
 
-.cm-completionList::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-color);
 }
 
