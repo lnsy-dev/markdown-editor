@@ -1,7 +1,6 @@
 import { EditorView, basicSetup, minimalSetup } from "codemirror";
 import { lineNumbers, highlightActiveLine, drawSelection, EditorView as EV, keymap, Decoration, ViewPlugin, ViewUpdate } from "@codemirror/view";
 import { markdown } from "@codemirror/lang-markdown";
-import { languages as cmLanguages } from "@codemirror/language-data";
 import { html } from "@codemirror/lang-html";
 import { syntaxHighlighting, LanguageDescription } from "@codemirror/language";
 import { classHighlighter } from "@lezer/highlight";
@@ -201,7 +200,6 @@ class MarkdownEditor extends DataroomElement {
               alias: ["js", "node"],
               load: () => Promise.resolve(javascript()),
             }),
-            ...cmLanguages,
           ],
         }),
         // Enable HTML language support for embedded HTML

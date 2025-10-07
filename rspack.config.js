@@ -12,10 +12,15 @@ const isProd = process.env.NODE_ENV === 'production';
 export default {
   entry: './index.js',
   mode: isProd ? 'production' : 'development',
+  devtool: isProd ? false : 'source-map',
   output: {
     filename: process.env.OUTPUT_FILE_NAME || 'markdown-editor.min.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+  },
+  optimization: {
+    splitChunks: false,
+    runtimeChunk: false,
   },
   devServer: {
     static: {
@@ -43,7 +48,7 @@ export default {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        // We still allow transpilation but also force dynamic imports to be bundled eagerly
         use: {
           loader: 'builtin:swc-loader',
           options: {
@@ -52,6 +57,11 @@ export default {
                 syntax: 'ecmascript',
               },
             },
+          },
+        },
+        parser: {
+          javascript: {
+            dynamicImportMode: 'eager',
           },
         },
       },
