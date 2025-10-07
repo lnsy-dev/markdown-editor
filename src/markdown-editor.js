@@ -224,15 +224,7 @@ class MarkdownEditor extends DataroomElement {
         syntaxHighlighting(classHighlighter),
         // Enable line wrapping at 80 characters
         EditorView.lineWrapping,
-        EditorView.theme({
-          ".cm-editor": {
-            "max-width": "80ch"
-          },
-          ".cm-content": {
-            "max-width": "80ch",
-            "white-space": "pre-wrap"
-          }
-        }),
+       
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             this.dirty = true;

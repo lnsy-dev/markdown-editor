@@ -15,6 +15,7 @@ markdown-editor {
   border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
+
 .cm-gutters {
   background-color: var(--trinary-color);
   color: var(--secondary-color);
@@ -303,7 +304,7 @@ markdown-editor {
   z-index: 9000 !important;
 }
 .cm-activeLine {
-  background-color: transparent;
+  background-color: var(--neutral-bg-color) !important;
   boxShadow: inset 2px 0 0 0 var(--neutral-bg-color);
 }
 .cm-activeLineGutter {
