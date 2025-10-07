@@ -26,6 +26,7 @@
   --color-1-muted: #a8a297;
   --color-1: #d7d0c5;
   --color-1-brighter: #e8e1d6;
+  --color-2-muted: #f7f0e4;
   --color-2: #5e5550;
   --color-3: #564c2e;
   --color-4: #99aabb;
@@ -35,6 +36,7 @@
   --darker-neutral-color: var(--color-1-muted);
   --neutral-bg-color: var(--color-1);  
   --lighter-neutral-bg-color: var(--color-1-brighter);
+  --lightest-neutral-bg-color: var(--color-2-muted);
 
   --neutral-fg-color: var(--color-1-muted);        
   --highlight-color: var(--highlight);     
@@ -44,8 +46,11 @@
   --link-color: var(--highlight-color);
   --code-secondary-highlight-color: var(--secondary-color);
   --code-foreground-color: var(--fg-color);
-  --code-background-color: var(--neutral-bg-color);
+  --code-background-color: var(--lightest-neutral-bg-color);
   --code-background-color-darker: var(--darker-neutral-bg-color);
+  --code-color-2: var(--color-2);
+  --code-color-3: var(--color-3);
+  --code-color-4: var(--color-4);
 
   --code-highlight-color: var(--trinary-color);
   --code-neutral-color: var(--neutral-fg-color);

@@ -71,24 +71,35 @@ markdown-editor {
 .cm-editor .tok-tagName,
 .cm-editor .tok-attributeName,
 .cm-editor .tok-definition {
-  color: var(--secondary-color);
+  color: var(--code-color-2);
 }
 
 .cm-editor .tok-string,
 .cm-editor .tok-attributeValue {
-  color: var(--trinary-color);
+  color: var(--code-color-3);
 }
 
 .cm-editor .tok-comment,
 .cm-editor .tok-meta {
-  color: var(--neutral-fg-color);
+  color: var(--code-foreground-color);
   font-style: italic;
 }
 
-.cm-editor .tok-variableName,
-.cm-editor .tok-propertyName,
+.cm-editor .tok-variableName {
+  color: var(--code-color-2) !important;
+}
+
+.cm-editor .tok-propertyName {
+  color: var(--code-color-3) !important;
+}
+
 .cm-editor .tok-bracket {
-  color: var(--fg-color);
+  color: var(--code-color-4) !important;
+}
+
+
+.cm-editor .tok-string {
+  color: var(--code-color-3) !important;
 }
 
 .cm-editor .tok-link {
@@ -96,12 +107,14 @@ markdown-editor {
   text-decoration: underline;
 }
 
+
+
 .cm-editor .tok-labelName {
   padding-right: 1em;
 }
 
 .cm-editor .tok-heading {
-  color: var(--secondary-color);
+  color: var(--color-2);
   background-color: var(--neutral-bg-color);
   font-style: italic;
   transition: color 0.25s ease-in;
@@ -123,7 +136,7 @@ markdown-editor {
 }
 
 .cm-activeLine > .tok-heading.tok-meta {
-  color: var(--secondary-color);
+  color: var(--color-1-muted);
   float: left;
   width: auto;
 }
