@@ -234,7 +234,80 @@ class MarkdownEditor extends DataroomElement {
             );
           }
         }),
+        // Handle image drag-and-drop
+        EditorView.domEventHandlers({
+          drop: (event, view) => {
+            const files = Array.from(event.dataTransfer.files);
+            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+            
+            if (imageFiles.length > 0) {
+              event.preventDefault();
+              imageFiles.forEach(file => this.handleImageDrop(file, view));
+              return true;
+            }
+            return false;
+          },
+          dragover: (event) => {
+            // Check if dragged items include files
+            if (event.dataTransfer.types.includes('Files')) {
+              event.preventDefault();
+              return true;
+            }
+            return false;
+          }
+        }),
       ],
+    });
+  }
+
+  /**
+   * Handles a dropped image file: converts to data URL, emits event, and inserts syntax
+   * @param {File} file - The dropped image file
+   * @param {EditorView} view - The CodeMirror editor view
+   */
+  async handleImageDrop(file, view) {
+    try {
+      // Read file as data URL
+      const dataURL = await this.readFileAsDataURL(file);
+
+      // Gather metadata
+      const metadata = {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+        lastModified: file.lastModified,
+        lastModifiedDate: new Date(file.lastModified).toISOString(),
+        dataURL: dataURL
+      };
+
+      // Emit event with dataroom this.event function
+      this.event('IMAGE-DROPPED', metadata);
+
+      // Insert ![[file-name]] syntax at cursor position
+      const cursorPos = view.state.selection.main.head;
+      const insertText = `![[${file.name}]]`;
+      
+      view.dispatch({
+        changes: { from: cursorPos, insert: insertText },
+        selection: EditorSelection.cursor(cursorPos + insertText.length)
+      });
+    } catch (error) {
+      console.error('Error handling image drop:', error);
+      this.event('IMAGE-DROP-ERROR', { error: error.message, fileName: file.name });
+    }
+  }
+
+  /**
+   * Reads a file and returns its data URL representation
+   * @param {File} file - The file to read
+   * @returns {Promise<string>} The file as a data URL
+   */
+  readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
     });
   }
 }

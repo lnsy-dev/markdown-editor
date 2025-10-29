@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chart Plugin Test</title>
+  <script type="module" src="/main.min.js"></script>
+  <style>
+    body {
+      background-color: var(--bg-color);
+      font-family: system-ui, sans-serif;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .test-section {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    
+    .chart-error {
+      background-color: #fee;
+      border: 1px solid #fcc;
+      padding: 1rem;
+      border-radius: 4px;
+      color: #c33;
+    }
+    
+    markdown-renderer {
+      display: block;
+      margin: 1rem 0;
+    }
+    
+    dataroom-chart {
+      margin: 1rem 0;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chart Plugin Test</h1>
+  
+  <div class="test-section">
+    <h2>Bar Chart Example</h2>
+    <markdown-renderer>
+# Bar Chart Test
+
+Here's a simple bar chart:
+
+```chart
+type: bar
+width: 500
+height: 300
+data:
+  - label: "A"
+    value: 30
+    color: "#ff6b6b"
+  - label: "B"
+    value: 80
+    color: "#4ecdc4"
+  - label: "C"
+    value: 45
+    color: "#45b7d1"
+  - label: "D"
+    value: 60
+    color: "#96ceb4"
+```
+
+That's it!
+    </markdown-renderer>
+  </div>
+
+  <div class="test-section">
+    <h2>Scatter Plot Example</h2>
+    <markdown-renderer>
+# Scatter Plot Test
+
+Here's a scatter plot:
+
+```chart
+type: scatter
+width: 400
+height: 400
+data:
+  - x: 10
+    y: 20
+    r: 5
+    c: "red"
+  - x: 30
+    y: 40
+    r: 8
+    c: "blue" 
+  - x: 50
+    y: 25
+    r: 12
+    c: "green"
+  - x: 70
+    y: 55
+    r: 6
+    c: "purple"
+```
+    </markdown-renderer>
+  </div>
+
+  <div class="test-section">
+    <h2>Line Graph Example</h2>
+    <markdown-renderer>
+# Line Graph Test
+
+Here's a line graph:
+
+```chart
+type: line
+width: 500
+height: 300
+lineWidth: 3
+data:
+  - x: 1
+    y: 10
+    c: "series1"
+  - x: 2
+    y: 25
+    c: "series1"
+  - x: 3
+    y: 15
+    c: "series1"
+  - x: 4
+    y: 30
+    c: "series1"
+  - x: 1
+    y: 5
+    c: "series2"
+  - x: 2
+    y: 15
+    c: "series2"
+  - x: 3
+    y: 25
+    c: "series2"
+  - x: 4
+    y: 20
+    c: "series2"
+```
+    </markdown-renderer>
+  </div>
+
+  <div class="test-section">
+    <h2>Donut Chart Example</h2>
+    <markdown-renderer>
+# Donut Chart Test
+
+Here's a donut chart:
+
+```chart
+type: donut
+width: 350
+height: 350
+data:
+  - label: "JavaScript"
+    value: 40
+    color: "#f1c40f"
+  - label: "Python"
+    value: 30
+    color: "#3498db"
+  - label: "Java"
+    value: 20
+    color: "#e74c3c"
+  - label: "Other"
+    value: 10
+    color: "#95a5a6"
+```
+    </markdown-renderer>
+  </div>
+
+</body>
+</html>
