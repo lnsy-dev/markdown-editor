@@ -99,7 +99,64 @@ Some initial content here. It will be normalized (dedented and without leading/t
 ```
 
 
-## Programmatic API (via CodeMirror EditorView)
+## Programmatic API
+
+The element provides convenience methods for common operations, as well as direct access to the CodeMirror EditorView instance (el.view) for advanced use.
+
+### Convenience methods
+
+- **insertString(str, line_number, char_number)**: Insert text at a specific position
+  - `str` (string): The text to insert
+  - `line_number` (number): 1-indexed line number
+  - `char_number` (number): 0-indexed character position within the line
+  - Returns: `true` on success, `false` on failure
+
+```js
+const el = document.querySelector("markdown-editor");
+el.insertString("Hello world", 1, 0); // Insert at beginning of line 1
+```
+
+- **replaceString(str, start_line, start_char, end_line, end_char)**: Replace text in a range
+  - `str` (string): The replacement text
+  - `start_line` (number): 1-indexed starting line number
+  - `start_char` (number): 0-indexed starting character position
+  - `end_line` (number): 1-indexed ending line number
+  - `end_char` (number): 0-indexed ending character position
+  - Returns: `true` on success, `false` on failure
+
+```js
+const el = document.querySelector("markdown-editor");
+// Replace first 5 characters of line 1 with "# Title"
+el.replaceString("# Title", 1, 0, 1, 5);
+```
+
+- **getCursor()**: Get current cursor position and context information
+  - Returns: Object with cursor details, or `null` on error
+    - `line` (number): 1-indexed line number
+    - `character` (number): 0-indexed character position within line
+    - `context` (string[]): Array of context tags describing cursor location
+    - `selected` (string, optional): Selected text if a selection exists
+
+```js
+const el = document.querySelector("markdown-editor");
+const cursor = el.getCursor();
+console.log(cursor);
+// Example outputs:
+// { line: 5, character: 12, context: ["js", "codeblock"] }
+// { line: 2, character: 0, context: ["heading", "h1"] }
+// { line: 10, character: 5, context: ["note", "aside"] }
+// { line: 3, character: 2, context: [], selected: "some text" }
+```
+
+Context tags:
+- `"codeblock"`: Cursor is inside a fenced code block (```)
+- Language name (e.g., `"js"`, `"python"`): Specific code block language
+- `"aside"`: Cursor is inside an aside block (:::)
+- Aside type (e.g., `"note"`, `"warning"`): Specific aside type
+- `"heading"`: Current line is a heading
+- Heading level (e.g., `"h1"`, `"h2"`): Specific heading level
+
+### Direct CodeMirror access
 
 The element exposes its CodeMirror EditorView instance as el.view. You can read and write the document programmatically.
 
@@ -143,16 +200,55 @@ Notes:
 
 ## Events
 
-The editor dispatches a bubbling, composed CustomEvent when the document changes:
+The editor dispatches bubbling, composed CustomEvents for various interactions:
 
-- Event name: EDITOR-UPDATED
-- When: any doc change
+### EDITOR-UPDATED
+
+Fires whenever the document content changes.
 
 ```js
 const el = document.querySelector("markdown-editor");
 el.addEventListener("EDITOR-UPDATED", (evt) => {
   // Respond to content changes
   console.log("markdown changed", el.view.state.doc.toString());
+});
+```
+
+### IMAGE-DROPPED
+
+Fires when an image file is dropped onto the editor. The event detail contains image metadata and a data URL.
+
+Event detail properties:
+- `fileName` (string): Original filename
+- `fileSize` (number): File size in bytes
+- `fileType` (string): MIME type (e.g., "image/png")
+- `lastModified` (number): Unix timestamp
+- `lastModifiedDate` (string): ISO 8601 date string
+- `dataURL` (string): Base64-encoded data URL of the image
+
+```js
+const el = document.querySelector("markdown-editor");
+el.addEventListener("IMAGE-DROPPED", (evt) => {
+  const { fileName, fileSize, fileType, dataURL } = evt.detail;
+  console.log(`Image dropped: ${fileName} (${fileSize} bytes)`);
+  // Use dataURL to display or upload the image
+  // The editor automatically inserts ![[filename]] syntax at cursor
+});
+```
+
+### IMAGE-DROP-ERROR
+
+Fires if an error occurs while processing a dropped image.
+
+Event detail properties:
+- `error` (string): Error message
+- `fileName` (string): Name of the file that caused the error
+
+```js
+const el = document.querySelector("markdown-editor");
+el.addEventListener("IMAGE-DROP-ERROR", (evt) => {
+  const { error, fileName } = evt.detail;
+  console.error(`Failed to process ${fileName}: ${error}`);
 });
 ```
 

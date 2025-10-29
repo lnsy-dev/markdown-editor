@@ -1,6 +1,6 @@
 {
   "name": "@lnsy/markdown-editor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A lightweight Markdown editor Web Component built on CodeMirror 6",
   "type": "module",
   "main": "dist/markdown-editor.min.js",
