@@ -310,6 +310,256 @@ class MarkdownEditor extends DataroomElement {
       reader.readAsDataURL(file);
     });
   }
+
+  /**
+   * Inserts a string at a specific line and character position
+   * @param {string} str - The string to insert
+   * @param {number} line_number - The 1-indexed line number
+   * @param {number} char_number - The 0-indexed character position within the line
+   * @returns {boolean} True if successful, false otherwise
+   */
+  insertString(str, line_number, char_number) {
+    if (!this.view) {
+      console.error('Editor view not initialized');
+      return false;
+    }
+
+    try {
+      const doc = this.view.state.doc;
+      
+      // Validate line number (1-indexed)
+      if (line_number < 1 || line_number > doc.lines) {
+        console.error(`Invalid line number: ${line_number}. Document has ${doc.lines} lines.`);
+        return false;
+      }
+
+      const line = doc.line(line_number);
+      
+      // Validate character position (0-indexed within the line)
+      if (char_number < 0 || char_number > line.length) {
+        console.error(`Invalid character position: ${char_number}. Line ${line_number} has ${line.length} characters.`);
+        return false;
+      }
+
+      // Calculate absolute position in the document
+      const pos = line.from + char_number;
+
+      // Insert the string
+      this.view.dispatch({
+        changes: { from: pos, insert: str },
+        selection: EditorSelection.cursor(pos + str.length)
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error inserting string:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Gets the current cursor position and context information
+   * @returns {Object} Cursor info object with line, character, context array, and optionally selected text
+   * @returns {number} return.line - The 1-indexed line number where cursor is located
+   * @returns {number} return.character - The 0-indexed character position within the line
+   * @returns {string[]} return.context - Array of context strings (e.g., ["js", "codeblock"], ["note", "aside"], ["heading", "h2"])
+   * @returns {string} [return.selected] - The selected text content, if any selection exists
+   */
+  getCursor() {
+    if (!this.view) {
+      console.error('Editor view not initialized');
+      return null;
+    }
+
+    try {
+      const state = this.view.state;
+      const doc = state.doc;
+      const selection = state.selection.main;
+      const cursorPos = selection.head;
+      
+      // Get line and character position
+      const line = doc.lineAt(cursorPos);
+      const lineNumber = line.number; // 1-indexed
+      const charPosition = cursorPos - line.from; // 0-indexed within line
+      
+      // Detect context by scanning document up to cursor position
+      const context = [];
+      let inCode = false;
+      let inAside = false;
+      let codeLang = null;
+      let asideType = null;
+      
+      // Helper functions (same as in the highlighter)
+      const isCodeFenceLine = (t) => /^\s*```+.*$/.test(t);
+      const isCodeFenceClose = (t) => /^\s*```+\s*$/.test(t);
+      const extractCodeLang = (t) => {
+        const m = t.match(/^\s*```+\s*([\w-]+)?/);
+        return m && m[1] ? m[1].toLowerCase() : null;
+      };
+      const isAsideFenceLine = (t) => /^\s*:::+.*$/.test(t);
+      const isAsideFenceClose = (t) => /^\s*:::+\s*$/.test(t);
+      const extractAsideType = (t) => {
+        const m = t.match(/^\s*:::+\s*([\w-]+)?/);
+        return m && m[1] ? m[1].toLowerCase() : null;
+      };
+      const isAtxHeading = (t) => /^\s{0,3}#{1,6}\s+.+$/.test(t);
+      const getAtxLevel = (t) => {
+        const m = t.match(/^\s{0,3}(#{1,6})\s+/);
+        return m ? m[1].length : null;
+      };
+      
+      // Scan from line 1 up to current line to determine state
+      for (let n = 1; n <= lineNumber; n++) {
+        const lineText = doc.line(n).text;
+        
+        // Check for code fence toggles
+        if (!inAside && isCodeFenceLine(lineText)) {
+          if (!inCode) {
+            inCode = true;
+            codeLang = extractCodeLang(lineText);
+          } else if (isCodeFenceClose(lineText)) {
+            // If on the closing fence line itself, still consider inside code block
+            if (n < lineNumber) {
+              inCode = false;
+              codeLang = null;
+            }
+          }
+        }
+        
+        // Check for aside fence toggles
+        if (!inCode && isAsideFenceLine(lineText)) {
+          if (!inAside) {
+            inAside = true;
+            asideType = extractAsideType(lineText);
+          } else if (isAsideFenceClose(lineText)) {
+            // If on the closing fence line itself, still consider inside aside block
+            if (n < lineNumber) {
+              inAside = false;
+              asideType = null;
+            }
+          }
+        }
+      }
+      
+      // Build context array
+      if (inCode) {
+        if (codeLang) {
+          context.push(codeLang);
+        }
+        context.push('codeblock');
+      }
+      
+      if (inAside) {
+        if (asideType) {
+          context.push(asideType);
+        }
+        context.push('aside');
+      }
+      
+      // Check if current line is a heading
+      const currentLineText = line.text;
+      if (!inCode && isAtxHeading(currentLineText)) {
+        const level = getAtxLevel(currentLineText);
+        if (level) {
+          context.push('heading');
+          context.push(`h${level}`);
+        }
+      }
+      
+      // Build result object
+      const result = {
+        line: lineNumber,
+        character: charPosition,
+        context: context
+      };
+      
+      // Add selected text if there's a selection
+      if (!selection.empty) {
+        const selectedText = doc.sliceString(selection.from, selection.to);
+        result.selected = selectedText;
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Error getting cursor info:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Replaces text within a specified range
+   * @param {string} str - The replacement string
+   * @param {number} start_line - The 1-indexed starting line number
+   * @param {number} start_char - The 0-indexed starting character position
+   * @param {number} end_line - The 1-indexed ending line number
+   * @param {number} end_char - The 0-indexed ending character position
+   * @returns {boolean} True if successful, false otherwise
+   */
+  replaceString(str, start_line, start_char, end_line, end_char) {
+    if (!this.view) {
+      console.error('Editor view not initialized');
+      return false;
+    }
+
+    try {
+      const doc = this.view.state.doc;
+      
+      // Validate start line
+      if (start_line < 1 || start_line > doc.lines) {
+        console.error(`Invalid start line: ${start_line}. Document has ${doc.lines} lines.`);
+        return false;
+      }
+      
+      // Validate end line
+      if (end_line < 1 || end_line > doc.lines) {
+        console.error(`Invalid end line: ${end_line}. Document has ${doc.lines} lines.`);
+        return false;
+      }
+      
+      // Validate line order
+      if (end_line < start_line) {
+        console.error(`End line (${end_line}) cannot be before start line (${start_line})`);
+        return false;
+      }
+
+      const startLine = doc.line(start_line);
+      const endLine = doc.line(end_line);
+      
+      // Validate start character position
+      if (start_char < 0 || start_char > startLine.length) {
+        console.error(`Invalid start character: ${start_char}. Line ${start_line} has ${startLine.length} characters.`);
+        return false;
+      }
+      
+      // Validate end character position
+      if (end_char < 0 || end_char > endLine.length) {
+        console.error(`Invalid end character: ${end_char}. Line ${end_line} has ${endLine.length} characters.`);
+        return false;
+      }
+
+      // Calculate absolute positions in the document
+      const fromPos = startLine.from + start_char;
+      const toPos = endLine.from + end_char;
+      
+      
+      // Validate position order
+      if (toPos < fromPos) {
+        console.error(`End position (line ${end_line}, char ${end_char}) cannot be before start position (line ${start_line}, char ${start_char})`);
+        return false;
+      }
+
+      // Replace the text in the range
+      this.view.dispatch({
+        changes: { from: fromPos, to: toPos, insert: str },
+        selection: EditorSelection.cursor(fromPos + str.length)
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error replacing string:', error);
+      return false;
+    }
+  }
 }
 
 customElements.define('markdown-editor', MarkdownEditor)
