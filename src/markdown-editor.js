@@ -14,6 +14,8 @@ import "../styles/theme.css";
 
 import DataroomElement from 'dataroom-js'
 import imageEmbedHighlighter, { formatWikiImage } from "./image-embed-plugin.js";
+import { wikiSyntaxExtensions } from "./wiki-syntax-extension.js";
+import wikilinkPreview from "./wikilink-preview-plugin.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -195,6 +197,7 @@ class MarkdownEditor extends DataroomElement {
         // Initialize the Markdown language support with fenced code language highlighting
         // Include explicit JavaScript support so fenced ```js/```javascript blocks get completions
         markdown({
+          extensions: wikiSyntaxExtensions,
           codeLanguages: [
             LanguageDescription.of({
               name: "javascript",
@@ -220,6 +223,8 @@ class MarkdownEditor extends DataroomElement {
         hrLineHighlighter,
         // Embedded wiki images with inline preview
         imageEmbedHighlighter,
+        // Wikilinks show label only until their line is active
+        wikilinkPreview,
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),

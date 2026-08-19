@@ -130,7 +130,9 @@ markdown-editor {
 }
 
 .cm-editor .tok-labelName {
-  padding-right: 1em;
+  color: var(--secondary-color);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
 }
 
 .cm-editor .tok-heading {
@@ -147,19 +149,21 @@ markdown-editor {
 }
 
 .tok-meta {
-  transition: width 0.5s ease-out;
+  transition: opacity 0.25s ease-out;
 }
 
-.tok-heading.tok-meta {
+.tok-heading.tok-meta,
+.cm-editor .tok-heading.tok-meta {
   color: transparent;
-  float: right;
-  width: 0px;
+  transition: color 0.25s ease-in;
 }
 
 .cm-activeLine > .tok-heading.tok-meta {
   color: var(--color-muted);
-  float: left;
-  width: auto;
+}
+
+.cm-line.cm-md-heading {
+  position: relative;
 }
 
 /* Bringhurst: strong rendered as italic, not bold */
@@ -174,11 +178,13 @@ markdown-editor {
 
 .cm-code-fence-line .tok-meta {
   color: transparent;
+  text-shadow: none;
   transition: color ease-in 0.25s;
 }
 
 .cm-activeLine.cm-code-fence-line > .tok-meta {
   color: var(--secondary-color) !important;
+  text-shadow: inherit;
   width: auto;
 }
 
@@ -297,7 +303,7 @@ markdown-editor {
 .cm-code-block-line {
   background-color: var(--code-background-color);
   color: var(--code-foreground-color);
-  font-family: var(--body-font-family);
+  font-family: var(--code-font-family);
   text-shadow: none;
 }
 
@@ -321,31 +327,45 @@ markdown-editor {
   background-color: transparent;
 }
 
+/* Hanging indent: padding-left creates gutter for the # markers,
+   text-indent pulls the first character back to flush left.
+   Values are per-level because # count and font-size differ. */
 .cm-line.cm-md-h1 {
   font-size: var(--md-h1-size);
   padding-top: var(--rhythm-md);
+  padding-left: 2ch;
+  text-indent: -2ch;
 }
 
 .cm-line.cm-md-h2 {
   font-size: var(--md-h2-size);
-  padding-left: 0;
+  padding-left: 3ch;
+  text-indent: -3ch;
 }
 
 .cm-line.cm-md-h3 {
   font-size: var(--md-h3-size);
   padding-top: var(--rhythm-sm);
+  padding-left: 4ch;
+  text-indent: -4ch;
 }
 
 .cm-line.cm-md-h4 {
   font-size: var(--md-h4-size);
+  padding-left: 5ch;
+  text-indent: -5ch;
 }
 
 .cm-line.cm-md-h5 {
   font-size: var(--md-h5-size);
+  padding-left: 6ch;
+  text-indent: -6ch;
 }
 
 .cm-line.cm-md-h6 {
   font-size: var(--md-h6-size);
+  padding-left: 7ch;
+  text-indent: -7ch;
 }
 
 .cm-content {
@@ -384,6 +404,18 @@ markdown-editor {
   word-break: break-all;
   font-size: 0.75em;
   opacity: 0.6;
+}
+
+.cm-wikilink-preview {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+
+.cm-wikilink-editing {
+  opacity: 0.85;
 }
 
 .cm-embedded-image {
