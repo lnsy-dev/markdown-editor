@@ -6,20 +6,18 @@
   <title>Project</title>
   <script type="module" src="/markdown-editor.min.js"></script>
   <style>
-    /*@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');*/
-
-    :root {
-      --body-font-family: "Fira Code", monospace;
-    }
-
     body {
-      background-color: var(--bg-color);
+      background-color: var(--bg-color, #f2ece2);
+      color: var(--fg-color, #444);
+      font-family: var(--body-font-family, 'EB Garamond', Georgia, serif);
+      margin: 0;
+      padding: 1em;
     }
 
     markdown-editor {
       box-sizing: content-box;
-      width: 49.8rem;
-      padding: 1em;
+      max-width: 80ch;
+      padding: 0 var(--rhythm-md, 1.5rem);
     }
 
   </style>

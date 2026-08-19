@@ -232,7 +232,7 @@ el.addEventListener("IMAGE-DROPPED", (evt) => {
   const { fileName, fileSize, fileType, dataURL } = evt.detail;
   console.log(`Image dropped: ${fileName} (${fileSize} bytes)`);
   // Use dataURL to display or upload the image
-  // The editor automatically inserts ![[filename]] syntax at cursor
+  // The editor automatically inserts ![[filename|data:image/...;base64,...]] at the drop point
 });
 ```
 

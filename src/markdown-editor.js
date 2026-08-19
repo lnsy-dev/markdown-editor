@@ -13,6 +13,7 @@ import "../styles/variables.css";
 import "../styles/theme.css";
 
 import DataroomElement from 'dataroom-js'
+import imageEmbedHighlighter, { formatWikiImage } from "./image-embed-plugin.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -217,6 +218,8 @@ class MarkdownEditor extends DataroomElement {
         drawSelection(),
         // Custom: highlight lines that are only '---'
         hrLineHighlighter,
+        // Embedded wiki images with inline preview
+        imageEmbedHighlighter,
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),
@@ -242,7 +245,13 @@ class MarkdownEditor extends DataroomElement {
             
             if (imageFiles.length > 0) {
               event.preventDefault();
-              imageFiles.forEach(file => this.handleImageDrop(file, view));
+              const dropPos = view.posAtCoords({ x: event.clientX, y: event.clientY });
+              (async () => {
+                let pos = dropPos ?? view.state.selection.main.head;
+                for (const file of imageFiles) {
+                  pos += await this.handleImageDrop(file, view, pos);
+                }
+              })();
               return true;
             }
             return false;
@@ -264,13 +273,13 @@ class MarkdownEditor extends DataroomElement {
    * Handles a dropped image file: converts to data URL, emits event, and inserts syntax
    * @param {File} file - The dropped image file
    * @param {EditorView} view - The CodeMirror editor view
+   * @param {number|null} dropPos - Document position at drop point
+   * @returns {Promise<number>} Number of characters inserted
    */
-  async handleImageDrop(file, view) {
+  async handleImageDrop(file, view, dropPos = null) {
     try {
-      // Read file as data URL
       const dataURL = await this.readFileAsDataURL(file);
 
-      // Gather metadata
       const metadata = {
         fileName: file.name,
         fileSize: file.size,
@@ -280,20 +289,23 @@ class MarkdownEditor extends DataroomElement {
         dataURL: dataURL
       };
 
-      // Emit event with dataroom this.event function
       this.event('IMAGE-DROPPED', metadata);
 
-      // Insert ![[file-name]] syntax at cursor position
-      const cursorPos = view.state.selection.main.head;
-      const insertText = `![[${file.name}]]`;
+      const insertPos = dropPos ?? view.state.selection.main.head;
+      const wikiImage = formatWikiImage(file.name, dataURL);
+      const prefix = insertPos > 0 && view.state.doc.sliceString(insertPos - 1, insertPos) !== "\n" ? "\n" : "";
+      const insertText = `${prefix}${wikiImage}\n`;
       
       view.dispatch({
-        changes: { from: cursorPos, insert: insertText },
-        selection: EditorSelection.cursor(cursorPos + insertText.length)
+        changes: { from: insertPos, insert: insertText },
+        selection: EditorSelection.cursor(insertPos + insertText.length)
       });
+
+      return insertText.length;
     } catch (error) {
       console.error('Error handling image drop:', error);
       this.event('IMAGE-DROP-ERROR', { error: error.message, fileName: file.name });
+      return 0;
     }
   }
 

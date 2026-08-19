@@ -1,64 +1,91 @@
 /*
-  *** begin ascii art ***
-  
-   _    _____    ____  _______    ____  __    ___________
-  | |  / /   |  / __ \/  _/   |  / __ )/ /   / ____/ ___/
-  | | / / /| | / /_/ // // /| | / __  / /   / __/  \__ \
-  | |/ / ___ |/ _, _// // ___ |/ /_/ / /___/ /___ ___/ /
-  |___/_/  |_/_/ |_/___/_/  |_/_____/_____/_____//____/
-  
-  *** end ascii art ***
-  
-  Most aesthethic options should live here for adjustment
+  Typographic system — warm paper palette and modular scale
+  aligned with archive-consulting-site/docs/styles.css
 */
 
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
 @layer defaults {
 
-
 :root {
-  --bg: #FFF8E7;
-  --fg: #5b4931;
-  --highlight: #c2c2c2;
-  --error-color: #ff0000;
-  --warning-color: #ffa500;
-  --confirm-color: #008000;
-  --color-1-muted: #a8a297;
-  --color-1: #d7d0c5;
-  --color-1-brighter: #e8e1d6;
-  --color-2-muted: #f7f0e4;
-  --color-2: #5e5550;
-  --color-3: #564c2e;
-  --color-4: #99aabb;
+  /* Palette — warm paper */
+  --color-bg:        #f2ece2;
+  --color-text:      #444;
+  --color-heading:   #444;
+  --color-link:      #E4191C;
+  --color-link-hover:#9F1113;
+  --color-rule:      rgba(0, 0, 0, 0.12);
+  --color-muted:     #666;
+  --color-tagline:   #555;
 
-  --bg-color: var(--bg);            
-  --fg-color: var(--fg);
-  --darker-neutral-color: var(--color-1-muted);
-  --neutral-bg-color: var(--color-1);  
-  --lighter-neutral-bg-color: var(--color-1-brighter);
-  --lightest-neutral-bg-color: var(--color-2-muted);
+  /* Modular scale (minor third, 1.2 ratio) */
+  --type-body:   1.25rem;
+  --type-h3:     1.5rem;
+  --type-h2:     1.8rem;
+  --type-h1:     2.16rem;
 
-  --neutral-fg-color: var(--color-1-muted);        
-  --highlight-color: var(--highlight);     
-  --secondary-color: var(--color-2);     
-  --trinary-color: var(--color-3); 
-  --quaternary-color: var(--color-4);  
-  --link-color: var(--highlight-color);
-  --code-secondary-highlight-color: var(--secondary-color);
-  --code-foreground-color: var(--fg-color);
-  --code-background-color: var(--lightest-neutral-bg-color);
-  --code-background-color-darker: var(--darker-neutral-bg-color);
-  --code-color-2: var(--color-2);
-  --code-color-3: var(--color-3);
-  --code-color-4: var(--color-4);
+  /* Leading */
+  --leading-body:    1.4;
+  --leading-heading: 1.15;
 
-  --code-highlight-color: var(--trinary-color);
-  --code-neutral-color: var(--neutral-fg-color);
-  --font-size: 1.0rem;
-  --line-height: 1.618rem;
+  /* Spacing rhythm */
+  --rhythm-xs:  0.5rem;
+  --rhythm-sm:  1rem;
+  --rhythm-md:  1.5rem;
 
+  /* Typography families */
+  --body-font-family:    'EB Garamond', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+  --heading-font-family: "Roboto Condensed", sans-serif;
 
+  /* Legacy aliases consumed by theme.css */
+  --bg:  var(--color-bg);
+  --fg:  var(--color-text);
 
+  --bg-color: var(--color-bg);
+  --fg-color: var(--color-text);
+  --link-color: var(--color-link);
+
+  --font-size:   var(--type-body);
+  --line-height: var(--leading-body);
+
+  --md-h1-size: var(--type-h1);
+  --md-h2-size: var(--type-h2);
+  --md-h3-size: var(--type-h3);
+  --md-h4-size: calc(var(--type-body) * 1.2);
+  --md-h5-size: var(--type-body);
+  --md-h6-size: calc(var(--type-body) * 0.9);
+
+  /* UI accents — subtle, no heavy borders */
+  --darker-neutral-color:     rgba(0, 0, 0, 0.04);
+  --neutral-bg-color:         rgba(0, 0, 0, 0.03);
+  --lighter-neutral-bg-color: rgba(0, 0, 0, 0.02);
+  --lightest-neutral-bg-color:rgba(0, 0, 0, 0.02);
+  --neutral-fg-color:         var(--color-muted);
+
+  --highlight-color: var(--color-link);
+  --secondary-color: var(--color-muted);
+  --trinary-color:   var(--color-tagline);
+  --quaternary-color:var(--color-rule);
+
+  --error-color:   var(--color-link-hover);
+  --warning-color: #c47a00;
+  --confirm-color: #3d6b3d;
+
+  /* Syntax token colors */
+  --code-foreground-color:        var(--color-text);
+  --code-background-color:        rgba(0, 0, 0, 0.02);
+  --code-background-color-darker: rgba(0, 0, 0, 0.04);
+  --code-highlight-color:         var(--color-link);
+  --code-neutral-color:           var(--color-muted);
+  --code-color-2:                 var(--color-text);
+  --code-color-3:                 var(--color-link);
+  --code-color-4:                 var(--color-muted);
+  --code-secondary-highlight-color: var(--color-tagline);
+
+  /* Markdown line decorations */
+  --md-hr-line-bg:       var(--color-rule);
+  --md-aside-fence-bg:   rgba(0, 0, 0, 0.02);
+  --md-aside-bg:         rgba(0, 0, 0, 0.02);
 }
 
 }

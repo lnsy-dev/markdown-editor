@@ -9,37 +9,58 @@ markdown-editor {
   color: var(--fg-color);
   outline-color: transparent !important;
   font-family: var(--body-font-family);
-  font-variant-ligatures: common-ligatures;
-  font-feature-settings: "liga" 1, "calt" 1;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures discretionary-ligatures historical-ligatures;
+  font-feature-settings:
+    'kern' 1,
+    'liga' 1,
+    'dlig' 1,
+    'calt' 1,
+    'cswh' 1,
+    'hlig' 1,
+    'ss01' 1,
+    'cv01' 1;
   text-rendering: optimizeLegibility;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow:
+    -0.5px -0.5px 0 rgba(0, 0, 0, 0.40),
+     0.5px  0.5px 0 rgba(255, 255, 255, 1);
+  border-bottom: 1px solid var(--color-rule);
 }
 
-
 .cm-gutters {
-  background-color: var(--trinary-color);
-  color: var(--secondary-color);
+  background-color: var(--bg-color);
+  color: var(--color-muted);
   border: none;
+  text-shadow: none;
+}
+
+.cm-gutterElement {
+  font-family: var(--heading-font-family);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
 }
 
 .cm-content {
   caret-color: var(--fg-color);
   font-family: var(--body-font-family);
-  font-variant-ligatures: common-ligatures;
-  font-feature-settings: "liga" 1, "calt" 1;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'calt' 1;
   text-rendering: optimizeLegibility;
 }
 
 .cm-focused .cm-cursor {
-  border-left-color: var(--fg-color);
+  border-left-color: var(--color-link);
 }
 
 .cm-line {
   font-family: var(--body-font-family);
   font-size: var(--font-size);
   line-height: var(--line-height);
-  font-variant-ligatures: common-ligatures;
-  font-feature-settings: "liga" 1, "calt" 1;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'calt' 1;
   text-rendering: optimizeLegibility;
 }
 
@@ -54,13 +75,13 @@ markdown-editor {
 }
 .ͼ7 {
   font-weight: normal;
-  background-color: var(--lighter-neutral-bg-color);
+  background-color: var(--code-background-color);
   text-decoration: none;
 }
 
 .cm-focused .cm-matchingBracket,
 .cm-focused .cm-surround {
-  background-color: var(--trinary-color);
+  background-color: rgba(228, 25, 28, 0.12);
   color: var(--fg-color);
 }
 
@@ -81,7 +102,7 @@ markdown-editor {
 
 .cm-editor .tok-comment,
 .cm-editor .tok-meta {
-  color: var(--code-foreground-color);
+  color: var(--code-neutral-color);
   font-style: italic;
 }
 
@@ -97,32 +118,32 @@ markdown-editor {
   color: var(--code-color-4) !important;
 }
 
-
 .cm-editor .tok-string {
   color: var(--code-color-3) !important;
 }
 
 .cm-editor .tok-link {
-  color: var(--secondary-color);
+  color: var(--link-color);
   text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
 }
-
-
 
 .cm-editor .tok-labelName {
   padding-right: 1em;
 }
 
 .cm-editor .tok-heading {
-  color: var(--color-2);
-  background-color: var(--neutral-bg-color);
-  font-style: italic;
+  color: var(--color-heading);
+  font-family: var(--heading-font-family);
+  font-weight: 400;
+  background-color: transparent;
+  font-style: normal;
   transition: color 0.25s ease-in;
-  margin-top: 1px;
 }
 
 .tok-heading:not(.tok-meta) {
-  padding-right: 1.25rem;
+  padding-right: 0.25rem;
 }
 
 .tok-meta {
@@ -136,13 +157,15 @@ markdown-editor {
 }
 
 .cm-activeLine > .tok-heading.tok-meta {
-  color: var(--color-1-muted);
+  color: var(--color-muted);
   float: left;
   width: auto;
 }
 
+/* Bringhurst: strong rendered as italic, not bold */
 .cm-editor .tok-strong {
-  font-weight: bold;
+  font-weight: 400;
+  font-style: italic;
 }
 
 .cm-editor .tok-emphasis {
@@ -162,11 +185,12 @@ markdown-editor {
 /* Autocomplete popup styling */
 .cm-tooltip {
   background-color: var(--bg-color) !important;
-  border: 1px solid var(--neutral-bg-color) !important;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(91, 73, 49, 0.15);
+  border: 1px solid var(--color-rule) !important;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   font-family: var(--body-font-family);
   font-size: var(--font-size);
+  text-shadow: none;
 }
 
 .cm-completionList {
@@ -198,9 +222,8 @@ markdown-editor {
   background-color: var(--lighter-neutral-bg-color) !important;
 }
 
-/* Autocomplete icons/labels */
 .cm-completionIcon {
-  color: var(--secondary-color) !important;
+  color: var(--color-link) !important;
   opacity: 0.8;
 }
 
@@ -227,7 +250,7 @@ markdown-editor {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--neutral-bg-color);
+  background: var(--color-rule);
   border-radius: 3px;
 }
 
@@ -235,19 +258,19 @@ markdown-editor {
   background: var(--secondary-color);
 }
 
-/* Comprehensive ligature support for all text elements */
+/* Ligature support */
 .cm-editor,
 .cm-content,
 .cm-line,
 .cm-editor * {
-  font-variant-ligatures: common-ligatures;
-  font-feature-settings: "liga" 1, "calt" 1;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'calt' 1;
   text-rendering: optimizeLegibility;
 }
 
-/* Markdown line decorations moved from JS to CSS */
+/* Markdown line decorations */
 .cm-hr-line {
-  background-color: var(--md-hr-line-bg, rgba(125,125,125,0.12));
+  background-color: var(--md-hr-line-bg, rgba(0, 0, 0, 0.12));
   color: transparent;
   transition: color 1s ease-in;
 }
@@ -257,55 +280,72 @@ markdown-editor {
 }
 
 .cm-code-fence-line {
-  background-color: var(--code-background-color, rgba(125,125,125,0.10));
+  background-color: var(--code-background-color);
+  font-family: var(--heading-font-family);
   font-size: 80%;
   text-align: right;
   padding-right: 1em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .cm-activeLine.cm-code-fence-line {
-  font-size: 100%;
+  font-size: 90%;
   text-align: left;
 }
 
 .cm-code-block-line {
-  background-color: var(--code-background-color, rgba(148,163,184,0.15));
-  color: var(--code-foreground-color, inherit);
+  background-color: var(--code-background-color);
+  color: var(--code-foreground-color);
+  font-family: var(--body-font-family);
+  text-shadow: none;
 }
 
 .cm-aside-fence-line {
-  background-color: var(--md-aside-fence-bg, rgba(253,186,116,0.18));
-  border-left: 3px solid var(--highlight-color, #FE7400);
+  background-color: var(--md-aside-fence-bg);
+  border-left: 2px solid var(--color-rule);
 }
 
 .cm-aside-block-line {
-  background-color: var(--md-aside-bg, rgba(253,186,116,0.12));
+  background-color: var(--md-aside-bg);
+  border-left: 2px solid var(--color-rule);
 }
 
+/* Heading lines — typographic scale, not colored bars */
 .cm-line.cm-md-heading {
-  padding-top: 1px;
+  font-family: var(--heading-font-family);
+  font-weight: 400;
+  line-height: var(--leading-heading);
+  color: var(--color-heading);
+  padding-top: var(--rhythm-xs);
+  background-color: transparent;
 }
+
 .cm-line.cm-md-h1 {
-  background-color: var(--darker-neutral-color);
+  font-size: var(--md-h1-size);
+  padding-top: var(--rhythm-md);
 }
+
 .cm-line.cm-md-h2 {
-  background-color: var(--secondary-color);
+  font-size: var(--md-h2-size);
+  padding-left: 0;
 }
 
 .cm-line.cm-md-h3 {
-  background-color: var(--trinary-color);
+  font-size: var(--md-h3-size);
+  padding-top: var(--rhythm-sm);
 }
+
 .cm-line.cm-md-h4 {
-  background-color: var(--quaternary-color);
-  opacity: 0.95;
+  font-size: var(--md-h4-size);
 }
+
 .cm-line.cm-md-h5 {
-  background-color: var(--quaternary-color);
-  opacity: 0.9;
+  font-size: var(--md-h5-size);
 }
+
 .cm-line.cm-md-h6 {
-  background-color: var(--quaternary-color);
-  opacity: 0.8;
+  font-size: var(--md-h6-size);
 }
 
 .cm-content {
@@ -314,24 +354,62 @@ markdown-editor {
 }
 
 .cm-selectionLayer {
-  opacity: 0.5;
+  opacity: 0.35;
   z-index: 9000 !important;
 }
+
 .cm-activeLine {
   background-color: var(--neutral-bg-color) !important;
-  boxShadow: inset 2px 0 0 0 var(--neutral-bg-color);
+  box-shadow: inset 2px 0 0 0 var(--color-rule);
 }
+
 .cm-activeLineGutter {
-  background-color: transparent;
+  background-color: var(--lighter-neutral-bg-color);
 }
 
 .cm-selectionBackground {
-            background-color: var(--highlight-color) !important;
-          }
-&.cm-focused .cm-selectionBackground {
-            background-color: var(--highlight-color) !important;
-          }
+  background-color: rgba(228, 25, 28, 0.18) !important;
+}
+
+.cm-focused .cm-selectionBackground {
+  background-color: rgba(228, 25, 28, 0.25) !important;
+}
 
 .cm-content ::selection {
-            background-color: var(--highlight-color);
-          }
+  background-color: rgba(228, 25, 28, 0.25);
+}
+
+/* Embedded wiki images — source hidden via Decoration.replace when not editing */
+.cm-wiki-image-line.cm-wiki-image-editing {
+  word-break: break-all;
+  font-size: 0.75em;
+  opacity: 0.6;
+}
+
+.cm-embedded-image {
+  display: block;
+  margin: var(--rhythm-xs, 0.5rem) 0 var(--rhythm-sm, 1rem);
+  max-width: 100%;
+  text-shadow: none;
+  background: transparent;
+}
+
+.cm-line:has(.cm-embedded-image) {
+  background: transparent !important;
+}
+
+.cm-embedded-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background: transparent;
+}
+
+.cm-embedded-image figcaption {
+  margin-top: var(--rhythm-xs, 0.5rem);
+  font-variant: small-caps;
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+  font-family: var(--body-font-family);
+}
