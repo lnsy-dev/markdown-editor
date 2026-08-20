@@ -13,18 +13,49 @@ class WikilinkPreviewWidget extends WidgetType {
     return other.label === this.label && other.target === this.target;
   }
 
-  toDOM() {
+  toDOM(view) {
     const el = document.createElement("span");
     el.className = "cm-wikilink-preview";
     el.textContent = this.label;
     if (this.label !== this.target) {
       el.title = this.target;
     }
+
+    // Prevent the editor from processing the mousedown so the line stays
+    // inactive (no cursor placement) — mirrors the todo-checkbox pattern.
+    el.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Emit WIKILINK-CLICKED on the host <markdown-editor> element so
+      // consumers can navigate without activating the editor line.
+      const host = view.dom.closest("markdown-editor");
+      const target = host ?? view.dom;
+      target.dispatchEvent(
+        new CustomEvent("WIKILINK-CLICKED", {
+          bubbles: true,
+          composed: true,
+          detail: {
+            target: this.target,
+            label: this.label,
+          },
+        }),
+      );
+    });
+
     return el;
   }
 
+  // Return true so CodeMirror ignores all events on the widget; we handle
+  // them ourselves in toDOM().  This prevents the line from becoming
+  // "active" when the widget is clicked.
   ignoreEvent() {
-    return false;
+    return true;
   }
 }
 

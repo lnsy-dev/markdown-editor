@@ -245,6 +245,22 @@ class MarkdownEditor extends DataroomElement {
             );
           }
         }),
+        // Handle triple-click: select the entire line (without trailing newline)
+        EditorView.mouseSelectionStyle.of((view, event) => {
+          if (event.detail !== 3) return null;
+          const pos = view.posAtCoords({ x: event.clientX, y: event.clientY });
+          if (pos == null) return null;
+          const line = view.state.doc.lineAt(pos);
+          const selection = EditorSelection.range(line.from, line.to);
+          return {
+            get(curEvent, extend, multiple) {
+              return multiple
+                ? view.state.selection.addRange(selection)
+                : EditorSelection.create([selection]);
+            },
+            update() { return false; },
+          };
+        }),
         // Handle image drag-and-drop
         EditorView.domEventHandlers({
           drop: (event, view) => {

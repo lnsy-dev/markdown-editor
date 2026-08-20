@@ -107,6 +107,10 @@ const HIDDEN_WIDGET = new FieldHiddenWidget();
 
 /**
  * Renders a citation [^id] as a superscript link: <sup class="cm-citation">id</sup>
+ *
+ * Clicking scrolls to the matching footnote definition ([^id]: …) in the
+ * document without activating (moving the cursor to) the citation line —
+ * mirroring the todo-marker and wikilink behaviour.
  */
 class CitationWidget extends WidgetType {
   constructor(id) {
@@ -118,23 +122,52 @@ class CitationWidget extends WidgetType {
     return other.id === this.id;
   }
 
-  toDOM() {
+  toDOM(view) {
     const sup = document.createElement("sup");
     sup.className = "cm-citation";
 
     const a = document.createElement("a");
     a.className = "cm-citation-link";
+    // Keep href as a fallback for non-JS environments / right-click copy.
     a.href = `#fn-${this.id}`;
     a.textContent = this.id;
-    a.setAttribute("aria-label", `citation ${this.id}`);
+    a.setAttribute("aria-label", `footnote ${this.id}`);
+
+    // Prevent cursor placement on mousedown (keeps the line inactive).
+    a.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Find the footnote definition line: [^id]: …
+      const doc = view.state.doc;
+      const defRe = new RegExp(`^\\[\\^${this.id}\\]:`);
+      for (let n = 1; n <= doc.lines; n++) {
+        const line = doc.line(n);
+        if (defRe.test(line.text)) {
+          // Scroll to the definition without moving the cursor.
+          view.dispatch({
+            effects: EditorView.scrollIntoView(line.from, { y: "start", yMargin: 40 }),
+          });
+          return;
+        }
+      }
+      // Definition not found — do nothing (href fallback already prevented).
+    });
 
     sup.appendChild(a);
     return sup;
   }
 
+  // Return true so CodeMirror ignores all events on the widget; we handle
+  // them ourselves in toDOM().  This prevents the line from becoming
+  // "active" when the citation is clicked.
   ignoreEvent() {
-    // Allow clicks to propagate so internal links work.
-    return false;
+    return true;
   }
 }
 

@@ -214,6 +214,23 @@ el.addEventListener("EDITOR-UPDATED", (evt) => {
 });
 ```
 
+### WIKILINK-CLICKED
+
+Fires when a user clicks a wikilink (`[[target]]` or `[[target|label]]`) on an **inactive** line. The line does not become active — clicking navigates rather than editing, mirroring the todo-marker behavior.
+
+Event detail properties:
+- `target` (string): The link target (the first part of `[[target|label]]`)
+- `label` (string): The display label (falls back to `target` when no pipe-label is present)
+
+```js
+const el = document.querySelector("markdown-editor");
+el.addEventListener("WIKILINK-CLICKED", (evt) => {
+  const { target, label } = evt.detail;
+  console.log(`Wikilink clicked: ${label} → ${target}`);
+  // Navigate to the linked page, open a modal, etc.
+});
+```
+
 ### IMAGE-DROPPED
 
 Fires when an image file is dropped onto the editor. The event detail contains image metadata and a data URL.
