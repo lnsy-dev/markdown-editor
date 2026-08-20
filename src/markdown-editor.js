@@ -19,6 +19,7 @@ import wikilinkPreview from "./wikilink-preview-plugin.js";
 import todoDecorationField from "./todo-checkbox-plugin.js";
 import bracketField from "./bracket-plugin.js";
 import blockquoteField from "./blockquote-plugin.js";
+import headingField from "./heading-plugin.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -51,12 +52,7 @@ const hrLineHighlighter = ViewPlugin.fromClass(class {
       return m && m[1] ? m[1].toLowerCase() : null;
     };
 
-    // ATX heading detection (#, ##, ... ######)
-    const isAtxHeading = (t) => /^\s{0,3}#{1,6}\s+.+$/.test(t);
-    const atxLevel = (t) => {
-      const m = t.match(/^\s{0,3}(#{1,6})\s+/);
-      return m ? m[1].length : null;
-    };
+
 
     // Compute state up to the start of each visible range so we know if we're inside a block
     const computeStateUpTo = (pos) => {
@@ -129,14 +125,6 @@ const hrLineHighlighter = ViewPlugin.fromClass(class {
           } else if (isAsideFenceClose(text)) {
             inAside = false;
             curAsideType = null;
-          }
-        }
-
-        // Headings (# .. ######) — decorate whole line per level
-        if (!inCode && isAtxHeading(text)) {
-          const lvl = atxLevel(text);
-          if (lvl) {
-            builder.add(line.from, line.from, lineDeco(`cm-md-heading cm-md-h${lvl}`));
           }
         }
 
@@ -234,6 +222,8 @@ class MarkdownEditor extends DataroomElement {
         bracketField,
         // Blockquotes: > text rendered as styled HTML when inactive
         blockquoteField,
+        // Headings: # prefix hidden when inactive, revealed on active line
+        headingField,
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),

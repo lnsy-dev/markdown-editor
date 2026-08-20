@@ -148,18 +148,18 @@ markdown-editor {
   padding-right: 0.25rem;
 }
 
-.tok-meta {
-  transition: opacity 0.25s ease-out;
-}
-
-.tok-heading.tok-meta,
-.cm-editor .tok-heading.tok-meta {
-  color: transparent;
-  transition: color 0.25s ease-in;
-}
-
+/* The # prefix on headings is hidden via Decoration.replace (heading-plugin.js)
+   when the cursor is not on that line. On active lines the raw text is shown;
+   give the # marker a muted colour so it doesn't compete with the heading text. */
 .cm-activeLine > .tok-heading.tok-meta {
   color: var(--color-muted);
+}
+
+/* Zero-width span used by heading-plugin to replace the hidden # prefix */
+.cm-heading-prefix-hidden {
+  display: inline;
+  width: 0;
+  overflow: hidden;
 }
 
 .cm-line.cm-md-heading {
