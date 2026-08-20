@@ -16,6 +16,7 @@ import DataroomElement from 'dataroom-js'
 import imageEmbedHighlighter, { formatWikiImage } from "./image-embed-plugin.js";
 import { wikiSyntaxExtensions } from "./wiki-syntax-extension.js";
 import wikilinkPreview from "./wikilink-preview-plugin.js";
+import todoDecorationField from "./todo-checkbox-plugin.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -225,6 +226,8 @@ class MarkdownEditor extends DataroomElement {
         imageEmbedHighlighter,
         // Wikilinks show label only until their line is active
         wikilinkPreview,
+        // Todo markers: - [ ] / [x] / [/] etc. → unicode symbols
+        todoDecorationField,
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),

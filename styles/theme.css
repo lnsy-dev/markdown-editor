@@ -327,45 +327,56 @@ markdown-editor {
   background-color: transparent;
 }
 
-/* Hanging indent: padding-left creates gutter for the # markers,
-   text-indent pulls the first character back to flush left.
-   Values are per-level because # count and font-size differ. */
+/* Inactive headings: # markers are transparent (via tok-heading.tok-meta above),
+   so no indent is needed — text sits flush left. */
 .cm-line.cm-md-h1 {
   font-size: var(--md-h1-size);
   padding-top: var(--rhythm-md);
-  padding-left: 2ch;
-  text-indent: -2ch;
+  padding-left: 0;
+  text-indent: 0;
 }
 
 .cm-line.cm-md-h2 {
   font-size: var(--md-h2-size);
-  padding-left: 3ch;
-  text-indent: -3ch;
+  padding-left: 0;
+  text-indent: 0;
 }
 
 .cm-line.cm-md-h3 {
   font-size: var(--md-h3-size);
   padding-top: var(--rhythm-sm);
-  padding-left: 4ch;
-  text-indent: -4ch;
+  padding-left: 0;
+  text-indent: 0;
 }
 
 .cm-line.cm-md-h4 {
   font-size: var(--md-h4-size);
-  padding-left: 5ch;
-  text-indent: -5ch;
+  padding-left: 0;
+  text-indent: 0;
 }
 
 .cm-line.cm-md-h5 {
   font-size: var(--md-h5-size);
-  padding-left: 6ch;
-  text-indent: -6ch;
+  padding-left: 0;
+  text-indent: 0;
 }
 
 .cm-line.cm-md-h6 {
   font-size: var(--md-h6-size);
-  padding-left: 7ch;
-  text-indent: -7ch;
+  padding-left: 0;
+  text-indent: 0;
+}
+
+/* Active heading: restore normal text flow so the visible # markers
+   lay out inline with the heading text, left-aligned like plain text. */
+.cm-activeLine.cm-md-h1,
+.cm-activeLine.cm-md-h2,
+.cm-activeLine.cm-md-h3,
+.cm-activeLine.cm-md-h4,
+.cm-activeLine.cm-md-h5,
+.cm-activeLine.cm-md-h6 {
+  padding-left: 0;
+  text-indent: 0;
 }
 
 .cm-content {
@@ -444,4 +455,92 @@ markdown-editor {
   letter-spacing: 0.02em;
   color: var(--color-muted);
   font-family: var(--body-font-family);
+}
+
+/* ── Todo items ──────────────────────────────────────────────────────────── */
+
+/*
+ * The widget span rendered in place of `- [x]`.
+ * Base styles shared by all states.
+ */
+.cm-todo-marker {
+  display: inline-block;
+  width: 1.1em;
+  text-align: center;
+  font-style: normal;
+  font-weight: normal;
+  /* Inherit the editor's text-shadow so the glyph blends into the page */
+  line-height: 1;
+  vertical-align: baseline;
+  /* Slightly smaller than body text so the symbol sits comfortably inline */
+  font-size: 0.85em;
+  position: relative;
+  top: 0.04em;
+  /* Prevent the symbol from being selected with surrounding text */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ○  Unchecked — open, light */
+.cm-todo-open {
+  color: var(--color-muted);
+  opacity: 0.6;
+}
+
+/* ◑  In progress — half-filled, neutral */
+.cm-todo-in-progress {
+  color: var(--color-text);
+  opacity: 0.85;
+}
+
+/* ◆  Important — solid diamond, draws the eye */
+.cm-todo-important {
+  color: var(--color-link);
+}
+
+/* ●  Done — solid circle, reads as complete */
+.cm-todo-done {
+  color: var(--color-muted);
+  opacity: 0.5;
+}
+
+/* ◌  Cancelled — dotted, de-emphasised */
+.cm-todo-cancelled {
+  color: var(--color-muted);
+  opacity: 0.4;
+}
+
+/* ◇  Question — open diamond, uncertain */
+.cm-todo-question {
+  color: var(--color-text);
+  opacity: 0.7;
+}
+
+/* ▶  Deferred — right-pointing arrow triangle */
+.cm-todo-deferred {
+  color: var(--color-muted);
+  opacity: 0.7;
+}
+
+/* ★  Starred — filled star */
+.cm-todo-starred {
+  color: var(--color-text);
+}
+
+/*
+ * Whole-line tinting — very subtle so it doesn't compete with heading colours.
+ * Applied via a Decoration.line in case you want to extend the plugin later;
+ * for now the line class is added only implicitly through the marker class
+ * on the line. If you add a line decoration, target these classes:
+ */
+.cm-todo-done-line {
+  opacity: 0.6;
+}
+
+/*
+ * Editing state — when the cursor is on a todo line the widget is replaced
+ * with a Decoration.mark over the raw `- [x]` text. Give it a subtle tint.
+ */
+.cm-todo-editing {
+  opacity: 0.7;
 }
