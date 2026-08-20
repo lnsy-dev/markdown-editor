@@ -609,3 +609,68 @@ sup.cm-citation .cm-citation-link:hover {
   vertical-align: super;
   line-height: 0;
 }
+
+/* ── Blockquote — Bringhurst: indented, no heavy styling ─────────────────── */
+
+/*
+ * All inactive blockquote lines share the base indented italic style.
+ * No border, no background — just rhythm and indentation.
+ */
+.cm-line.cm-blockquote-line {
+  padding-left: var(--rhythm-md);
+  font-style: italic;
+  color: #444;
+}
+
+.cm-line.cm-blockquote-first {
+  margin-top: var(--rhythm-md);
+}
+
+.cm-line.cm-blockquote-last {
+  margin-bottom: var(--rhythm-md);
+}
+
+/*
+ * Citation line — no extra line treatment needed beyond the base;
+ * the <cite> widget handles all its own styling.
+ */
+.cm-line.cm-blockquote-cite-line {
+  padding-top: 0;
+}
+
+/*
+ * The inline <cite> widget that replaces `-- ` / `— ` + author text.
+ */
+cite.cm-blockquote-cite {
+  display: block;
+  margin-top: var(--rhythm-xs);
+  font-style: normal;
+  font-variant: small-caps;
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
+  color: #666;
+}
+
+cite.cm-blockquote-cite::before {
+  content: "\2014\00a0"; /* — + non-breaking space */
+  opacity: 0.5;
+}
+
+/*
+ * The zero-width span used to hide `> ` prefix characters.
+ */
+.cm-bq-hidden {
+  display: inline;
+  width: 0;
+  overflow: hidden;
+}
+
+/*
+ * Editing state — cursor is inside the block, raw `> …` syntax is visible.
+ * Match the inactive indent so the block doesn't jump when entering edit mode.
+ */
+.cm-line.cm-blockquote-editing {
+  padding-left: var(--rhythm-md);
+  font-style: italic;
+  color: #444;
+}

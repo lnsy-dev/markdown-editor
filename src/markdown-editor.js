@@ -18,6 +18,7 @@ import { wikiSyntaxExtensions } from "./wiki-syntax-extension.js";
 import wikilinkPreview from "./wikilink-preview-plugin.js";
 import todoDecorationField from "./todo-checkbox-plugin.js";
 import bracketField from "./bracket-plugin.js";
+import blockquoteField from "./blockquote-plugin.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -231,6 +232,8 @@ class MarkdownEditor extends DataroomElement {
         todoDecorationField,
         // Bracket fields [key:: value] and citations [^id]
         bracketField,
+        // Blockquotes: > text rendered as styled HTML when inactive
+        blockquoteField,
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),
