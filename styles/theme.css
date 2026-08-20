@@ -544,3 +544,68 @@ markdown-editor {
 .cm-todo-editing {
   opacity: 0.7;
 }
+
+/* ── Bracket fields  [key:: value] ──────────────────────────────────────── */
+
+/*
+ * .cm-field-hidden  — the zero-width replacement widget.
+ * No visible dimensions; purely removes the field from the rendered line.
+ */
+.cm-field-hidden {
+  display: inline;
+  width: 0;
+  overflow: hidden;
+}
+
+/*
+ * .cm-field-editing — shown when the cursor is on the field's line.
+ * Subtle muted tint so the syntax is visible but not distracting.
+ */
+.cm-field-editing {
+  color: var(--color-muted);
+  opacity: 0.65;
+  font-size: 0.9em;
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+}
+
+/* ── Citations  [^id] ────────────────────────────────────────────────────── */
+
+/*
+ * The <sup> wrapper rendered by CitationWidget.
+ */
+sup.cm-citation {
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: super;
+  font-variant-numeric: lining-nums;
+  /* Reset any text-shadow that would look odd at superscript size */
+  text-shadow: none;
+}
+
+/*
+ * The anchor inside the superscript.
+ */
+sup.cm-citation .cm-citation-link {
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+sup.cm-citation .cm-citation-link:hover {
+  opacity: 0.75;
+}
+
+/*
+ * .cm-citation-editing — shown when the cursor is on a citation's line.
+ * The raw [^id] text is revealed; give it a link-like tint so it reads as
+ * a reference even in its raw form.
+ */
+.cm-citation-editing {
+  color: red;
+  opacity: 0.7;
+  font-size: 0.85em;
+  vertical-align: super;
+  line-height: 0;
+}

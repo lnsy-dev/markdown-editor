@@ -17,6 +17,7 @@ import imageEmbedHighlighter, { formatWikiImage } from "./image-embed-plugin.js"
 import { wikiSyntaxExtensions } from "./wiki-syntax-extension.js";
 import wikilinkPreview from "./wikilink-preview-plugin.js";
 import todoDecorationField from "./todo-checkbox-plugin.js";
+import bracketField from "./bracket-plugin.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -228,6 +229,8 @@ class MarkdownEditor extends DataroomElement {
         wikilinkPreview,
         // Todo markers: - [ ] / [x] / [/] etc. → unicode symbols
         todoDecorationField,
+        // Bracket fields [key:: value] and citations [^id]
+        bracketField,
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),
