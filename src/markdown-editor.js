@@ -227,8 +227,12 @@ class MarkdownEditor extends DataroomElement {
         
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),
-        // Enable line wrapping at 80 characters
+        // Enable line wrapping
         EditorView.lineWrapping,
+        // Constrain content width to ~80 characters (80ch at 1.25rem/20px ≈ 720px)
+        EditorView.theme({
+          "&": { maxWidth: "720px" },
+        }),
        
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {

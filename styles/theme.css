@@ -2,6 +2,7 @@ markdown-editor {
   margin: auto;
   display: block;
   overflow: hidden;
+  max-width: 720px;
 }
 
 .cm-editor {
@@ -85,41 +86,76 @@ markdown-editor {
   color: var(--fg-color);
 }
 
-/* Token styles via classHighlighter */
+/* Token styles via classHighlighter — greyscale palette, red for comments only */
+
+/* Keywords, atoms, numbers, tags: dark grey — structural, prominent */
 .cm-editor .tok-keyword,
 .cm-editor .tok-atom,
 .cm-editor .tok-number,
 .cm-editor .tok-tagName,
-.cm-editor .tok-attributeName,
 .cm-editor .tok-definition {
   color: var(--code-color-2);
 }
 
+/* Attribute names: medium-dark grey — distinct from values */
+.cm-editor .tok-attributeName {
+  color: var(--code-color-5);
+}
+
+/* Strings and attribute values: mid grey */
 .cm-editor .tok-string,
 .cm-editor .tok-attributeValue {
   color: var(--code-color-3);
 }
 
-.cm-editor .tok-comment,
-.cm-editor .tok-meta {
+/* Comments: red, italic — the one accent color */
+.cm-editor .tok-comment {
   color: var(--code-neutral-color);
   font-style: italic;
 }
 
+/* Meta tokens (e.g. preprocessor directives): red, not italic */
+.cm-editor .tok-meta {
+  color: var(--code-neutral-color);
+  font-style: normal;
+}
+
+/* Variable names: medium-dark grey */
 .cm-editor .tok-variableName {
-  color: var(--code-color-2) !important;
+  color: var(--code-color-5) !important;
 }
 
+/* Property names: medium-light grey — softer than variable names */
 .cm-editor .tok-propertyName {
-  color: var(--code-color-3) !important;
+  color: var(--code-color-6) !important;
 }
 
-.cm-editor .tok-bracket {
+/* Brackets and punctuation: light grey — recede into background */
+.cm-editor .tok-bracket,
+.cm-editor .tok-punctuation {
   color: var(--code-color-4) !important;
 }
 
+/* Strings (override): mid grey */
 .cm-editor .tok-string {
   color: var(--code-color-3) !important;
+}
+
+/* Operators: medium grey */
+.cm-editor .tok-operator {
+  color: var(--code-secondary-highlight-color);
+}
+
+/* Type names: dark grey, slightly distinguished from keywords */
+.cm-editor .tok-typeName,
+.cm-editor .tok-className {
+  color: var(--code-color-2);
+  font-style: italic;
+}
+
+/* Built-in names: medium grey */
+.cm-editor .tok-name {
+  color: var(--code-color-5);
 }
 
 .cm-editor .tok-link {
@@ -304,6 +340,7 @@ markdown-editor {
   background-color: var(--code-background-color);
   color: var(--code-foreground-color);
   font-family: var(--code-font-family);
+  font-size: 90%;
   text-shadow: none;
 }
 
@@ -673,4 +710,65 @@ cite.cm-blockquote-cite::before {
   padding-left: var(--rhythm-md);
   font-style: italic;
   color: #444;
+}
+
+/* ── Todo state dropdown ──────────────────────────────────────────────────── */
+
+/*
+ * Floating menu that appears when the user clicks a .cm-todo-marker widget.
+ * Appended to <body> and positioned absolutely so it escapes any overflow:hidden
+ * container on the editor.
+ */
+.cm-todo-dropdown {
+  position: absolute;
+  z-index: 10000;
+  min-width: 11rem;
+  padding: 0.25rem 0;
+  background-color: var(--bg-color);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  font-family: var(--body-font-family);
+  font-size: var(--font-size);
+  text-shadow: none;
+  /* Prevent the editor's text-shadow from leaking in via inheritance */
+  -webkit-font-smoothing: antialiased;
+}
+
+.cm-todo-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  color: var(--fg-color);
+  border-radius: 2px;
+  margin: 1px 4px;
+  transition: background-color 0.1s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cm-todo-dropdown-item:hover {
+  background-color: var(--neutral-bg-color);
+}
+
+/* Highlight the currently active state */
+.cm-todo-dropdown-item--active {
+  background-color: var(--lighter-neutral-bg-color);
+  font-weight: 500;
+}
+
+.cm-todo-dropdown-symbol {
+  display: inline-block;
+  width: 1.1em;
+  text-align: center;
+  font-size: 0.85em;
+  /* Inherit the item's color so each symbol keeps its state colour */
+  flex-shrink: 0;
+}
+
+.cm-todo-dropdown-label {
+  color: var(--fg-color);
+  font-size: 0.9em;
 }

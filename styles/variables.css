@@ -72,16 +72,18 @@
   --warning-color: #c47a00;
   --confirm-color: #3d6b3d;
 
-  /* Syntax token colors */
-  --code-foreground-color:        var(--color-text);
+  /* Syntax token colors — greyscale palette, red reserved for comments */
+  --code-foreground-color:        #3a3a3a;  /* base: dark grey for plain code text */
   --code-background-color:        rgba(0, 0, 0, 0.02);
   --code-background-color-darker: rgba(0, 0, 0, 0.04);
-  --code-highlight-color:         var(--color-link);
-  --code-neutral-color:           var(--color-muted);
-  --code-color-2:                 var(--color-text);
-  --code-color-3:                 var(--color-link);
-  --code-color-4:                 var(--color-muted);
-  --code-secondary-highlight-color: var(--color-tagline);
+  --code-highlight-color:         var(--color-link); /* inline code accent */
+  --code-neutral-color:           var(--color-link); /* comments → red */
+  --code-color-2:                 #4a4a4a;  /* keywords, atoms, numbers, tags — dark grey */
+  --code-color-3:                 #7a7a7a;  /* strings, attribute values — mid grey */
+  --code-color-4:                 #9a9a9a;  /* brackets — light grey */
+  --code-color-5:                 #5a5a5a;  /* variable names — medium-dark grey */
+  --code-color-6:                 #8a8a8a;  /* property names — medium-light grey */
+  --code-secondary-highlight-color: #6a6a6a; /* general accent grey */
 
   /* Markdown line decorations */
   --md-hr-line-bg:       var(--color-rule);

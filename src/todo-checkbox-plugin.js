@@ -16,15 +16,18 @@ import { EditorView, Decoration, WidgetType } from "@codemirror/view";
  *  [*] ★  U+2605 BLACK STAR                 — starred / pinned
  */
 const TODO_MARKERS = {
-  " ": { char: "○", cls: "cm-todo-open" },
-  "/": { char: "◑", cls: "cm-todo-in-progress" },
-  "!": { char: "◆", cls: "cm-todo-important" },
-  "x": { char: "●", cls: "cm-todo-done" },
-  "-": { char: "◌", cls: "cm-todo-cancelled" },
-  "?": { char: "◇", cls: "cm-todo-question" },
-  ">": { char: "▶", cls: "cm-todo-deferred" },
-  "*": { char: "★", cls: "cm-todo-starred" },
+  " ": { char: "○", cls: "cm-todo-open",        label: "Open" },
+  "/": { char: "◑", cls: "cm-todo-in-progress", label: "In Progress" },
+  "!": { char: "◆", cls: "cm-todo-important",   label: "Important" },
+  "x": { char: "●", cls: "cm-todo-done",        label: "Done" },
+  "-": { char: "◌", cls: "cm-todo-cancelled",   label: "Cancelled" },
+  "?": { char: "◇", cls: "cm-todo-question",    label: "Question" },
+  ">": { char: "▶", cls: "cm-todo-deferred",    label: "Deferred" },
+  "*": { char: "★", cls: "cm-todo-starred",     label: "Starred" },
 };
+
+// Ordered list of marker keys for display in the dropdown.
+const MARKER_ORDER = [" ", "/", "!", "x", "-", "?", ">", "*"];
 
 // Matches a list-item todo marker: optional leading spaces, then `- [X]`
 // where X is one of the known marker characters.
@@ -33,30 +36,165 @@ const TODO_MARKERS = {
 // Capture group 3: the closing `]`
 const TODO_RE = /^(\s*- \[)([/ !x\-?>\*])(\])/;
 
+// ── Dropdown ─────────────────────────────────────────────────────────────────
+
+let activeDropdown = null;
+
+function removeActiveDropdown() {
+  if (activeDropdown) {
+    activeDropdown.remove();
+    activeDropdown = null;
+  }
+}
+
+/**
+ * Show a dropdown menu anchored below `anchorEl` that lets the user pick a
+ * new todo state.  When an item is chosen the document is patched via `view`.
+ *
+ * @param {HTMLElement} anchorEl  - the .cm-todo-marker span that was clicked
+ * @param {string}      currentKey - the current marker key (e.g. "x")
+ * @param {EditorView}  view
+ * @param {number}      markerFrom - document position of the marker char
+ * @param {number}      markerTo   - document position after the marker char
+ */
+function showTodoDropdown(anchorEl, currentKey, view, markerFrom, markerTo) {
+  removeActiveDropdown();
+
+  const menu = document.createElement("div");
+  menu.className = "cm-todo-dropdown";
+  menu.setAttribute("role", "listbox");
+  menu.setAttribute("aria-label", "Change todo state");
+
+  for (const key of MARKER_ORDER) {
+    const info = TODO_MARKERS[key];
+    const item = document.createElement("div");
+    item.className = `cm-todo-dropdown-item ${info.cls}`;
+    if (key === currentKey) item.classList.add("cm-todo-dropdown-item--active");
+    item.setAttribute("role", "option");
+    item.setAttribute("aria-selected", key === currentKey ? "true" : "false");
+    item.dataset.key = key;
+
+    const symbol = document.createElement("span");
+    symbol.className = "cm-todo-dropdown-symbol";
+    symbol.textContent = info.char;
+
+    const labelEl = document.createElement("span");
+    labelEl.className = "cm-todo-dropdown-label";
+    labelEl.textContent = info.label;
+
+    item.appendChild(symbol);
+    item.appendChild(labelEl);
+
+    item.addEventListener("mousedown", (e) => {
+      // Prevent the editor from receiving focus / cursor placement.
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (key !== currentKey) {
+        view.dispatch({
+          changes: { from: markerFrom, to: markerTo, insert: key },
+        });
+      }
+      removeActiveDropdown();
+    });
+
+    menu.appendChild(item);
+  }
+
+  // Position below the anchor element.
+  document.body.appendChild(menu);
+  activeDropdown = menu;
+
+  const rect = anchorEl.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
+
+  let top  = rect.bottom + window.scrollY + 4;
+  let left = rect.left   + window.scrollX;
+
+  // Keep within viewport horizontally.
+  const rightEdge = left + menuRect.width;
+  if (rightEdge > window.innerWidth - 8) {
+    left = window.innerWidth - menuRect.width - 8;
+  }
+
+  menu.style.top  = `${top}px`;
+  menu.style.left = `${left}px`;
+
+  // Close on any outside click or Escape.
+  const onOutside = (e) => {
+    if (!menu.contains(e.target) && e.target !== anchorEl) {
+      removeActiveDropdown();
+      document.removeEventListener("mousedown", onOutside, true);
+      document.removeEventListener("keydown", onKey, true);
+    }
+  };
+  const onKey = (e) => {
+    if (e.key === "Escape") {
+      removeActiveDropdown();
+      document.removeEventListener("mousedown", onOutside, true);
+      document.removeEventListener("keydown", onKey, true);
+    }
+  };
+
+  // Use capture so we see the event before CodeMirror does.
+  document.addEventListener("mousedown", onOutside, true);
+  document.addEventListener("keydown", onKey, true);
+}
+
+// ── Widget ────────────────────────────────────────────────────────────────────
+
 class TodoWidget extends WidgetType {
-  constructor(char, cls) {
+  constructor(char, cls, markerKey, markerFrom, markerTo) {
     super();
-    this.char = char;
-    this.cls = cls;
+    this.char      = char;
+    this.cls       = cls;
+    this.markerKey = markerKey;
+    this.markerFrom = markerFrom;
+    this.markerTo   = markerTo;
   }
 
   eq(other) {
-    return other.char === this.char && other.cls === this.cls;
+    return (
+      other.char       === this.char &&
+      other.cls        === this.cls &&
+      other.markerKey  === this.markerKey &&
+      other.markerFrom === this.markerFrom &&
+      other.markerTo   === this.markerTo
+    );
   }
 
-  toDOM() {
+  toDOM(view) {
     const span = document.createElement("span");
     span.className = `cm-todo-marker ${this.cls}`;
     span.textContent = this.char;
     span.setAttribute("aria-hidden", "true");
+    span.setAttribute("title", `${TODO_MARKERS[this.markerKey].label} — click to change`);
+
+    span.addEventListener("mousedown", (e) => {
+      // Prevent the editor from processing the click so the line stays
+      // inactive (no cursor placement).
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    span.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      showTodoDropdown(span, this.markerKey, view, this.markerFrom, this.markerTo);
+    });
+
     return span;
   }
 
-  // Let mouse events fall through so clicks position the cursor normally.
+  // Return true so CodeMirror ignores all events on the widget; we handle
+  // them ourselves in toDOM().  This also prevents the line from becoming
+  // "active" when the widget is clicked.
   ignoreEvent() {
-    return false;
+    return true;
   }
 }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 /**
  * Returns true if the cursor (or selection) touches the given line number,
@@ -87,21 +225,20 @@ function buildDecorations(state) {
     const info = TODO_MARKERS[markerChar];
     if (!info) continue;
 
-    // Start of `- [` prefix (after leading whitespace) and end of `]`
-    const leadLen   = match[1].length; // e.g. "- [" = 3 chars
-    const fromPos   = line.from + leadLen;  // position of the marker char `x`
-    const toPos     = line.from + leadLen + 1 + match[3].length; // through `]`
+    // Leading whitespace before the `- [` token.
+    const indentLen  = line.text.search(/\S/);
+    const dashFrom   = line.from + (indentLen === -1 ? 0 : indentLen);
 
-    // Full replacement range: the whole `- [x]` → widget + trailing ` `
-    // We keep the leading whitespace (indentation) untouched.
-    const replaceFrom = line.from + match[1].length - 3; // start of `- [`... actually start of `- ` after indent
-    // Let's be precise: replace from the start of `- [` to the end of `]`
-    const indentLen   = line.text.search(/\S/); // leading spaces
-    const dashFrom    = line.from + (indentLen === -1 ? 0 : indentLen); // position of `-`
-    const closeBracketTo = line.from + match[0].length; // position after `]`
+    // Full `- [x]` replacement range.
+    const closeBracketTo = line.from + match[0].length;
+
+    // Position of just the marker character inside `[x]`.
+    const leadLen   = match[1].length;          // e.g. "- [" = 3
+    const markerFrom = line.from + leadLen;      // position of "x"
+    const markerTo   = markerFrom + 1;           // position after "x"
 
     if (isLineActive(state, n)) {
-      // Line is being edited — just add a styling mark so we can style the raw text
+      // Line is being edited — show a mark over the raw `- [x]` text.
       builder.add(
         dashFrom,
         closeBracketTo,
@@ -110,18 +247,20 @@ function buildDecorations(state) {
       continue;
     }
 
-    // Replace `- [x]` with the unicode widget, preserving indentation
+    // Replace `- [x]` with the unicode widget, preserving indentation.
     builder.add(
       dashFrom,
       closeBracketTo,
       Decoration.replace({
-        widget: new TodoWidget(info.char, info.cls),
+        widget: new TodoWidget(info.char, info.cls, markerChar, markerFrom, markerTo),
       }),
     );
   }
 
   return builder.finish();
 }
+
+// ── State field ───────────────────────────────────────────────────────────────
 
 const todoDecorationField = StateField.define({
   create(state) {
