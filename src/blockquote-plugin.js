@@ -28,6 +28,7 @@
 
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 // ---------------------------------------------------------------------------
 // Regex
@@ -140,6 +141,7 @@ function buildDecorations(state) {
   const doc = state.doc;
   const skipLines = codeBlockLines(doc);
   const blocks = collectBlocks(doc, skipLines);
+  const readOnly = state.field(readOnlyState);
 
   // Collect all entries so we can sort before adding (RangeSetBuilder requires
   // strictly ascending order).
@@ -158,7 +160,7 @@ function buildDecorations(state) {
     for (const { lineNum, prefixLen, body } of block.lines) {
       const line = doc.line(lineNum);
 
-      if (active) {
+      if (active && !readOnly) {
         // ── Active: show raw text, add editing class ─────────────────────
         entries.push({
           from: line.from,
@@ -234,7 +236,7 @@ function buildDecorations(state) {
 const blockquoteField = StateField.define({
   create(state) { return buildDecorations(state); },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) return buildDecorations(tr.state);
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) return buildDecorations(tr.state);
     return deco.map(tr.changes);
   },
   provide: (f) => EditorView.decorations.from(f),

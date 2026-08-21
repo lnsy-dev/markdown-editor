@@ -8,6 +8,7 @@
 
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 // Ensure the custom element is registered for rendered widgets.
 import "@lnsy/network-visualization";
@@ -374,9 +375,10 @@ function buildDecorations(state) {
   const builder = new RangeSetBuilder();
   const doc = state.doc;
   const blocks = findNetworkBlocks(doc);
+  const readOnly = state.field(readOnlyState);
 
   for (const block of blocks) {
-    if (isSelectionInBlock(state, block)) {
+    if (!readOnly && isSelectionInBlock(state, block)) {
       const firstLine = doc.lineAt(block.from);
       builder.add(
         firstLine.from,
@@ -386,6 +388,7 @@ function buildDecorations(state) {
       continue;
     }
 
+    // In read-only mode the interactive widget stays rendered.
     builder.add(
       block.from,
       block.to,
@@ -408,7 +411,7 @@ const networkBlockField = StateField.define({
     return buildDecorations(state);
   },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) {
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) {
       return buildDecorations(tr.state);
     }
     return deco.map(tr.changes);

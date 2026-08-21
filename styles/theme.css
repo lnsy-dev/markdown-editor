@@ -804,6 +804,19 @@ cite.cm-blockquote-cite::before {
   aspect-ratio: 4 / 3;
 }
 
+/* The rendered widget may contain whitespace text nodes between hidden
+   <network-node> / <network-edge> elements. If the host defines a line-height,
+   those nodes create line boxes that push the WebGL canvas down while the
+   CSS2D label overlay stays at the top, making labels look too high. Collapse
+   the container's line-height and restore it on labels. */
+.cm-network-widget network-visualization {
+  line-height: 0;
+}
+
+.cm-network-widget network-visualization .node-label {
+  line-height: var(--line-height);
+}
+
 .cm-chart-widget dataroom-chart pre,
 .cm-chart-widget dataroom-chart code {
   display: none;
@@ -823,4 +836,17 @@ cite.cm-blockquote-cite::before {
 .cm-line.cm-chart-block-editing,
 .cm-line.cm-network-block-editing {
   background-color: var(--code-background-color);
+}
+
+/* Read-only mode: suppress cursor and active-line highlights because the
+   editor content is not editable. Widgets (charts, networks, todos) remain
+   interactive via their own event handlers. */
+markdown-editor.read-only .cm-cursor {
+  display: none;
+}
+
+markdown-editor.read-only .cm-activeLine,
+markdown-editor.read-only .cm-activeLineGutter {
+  background-color: transparent !important;
+  box-shadow: none;
 }

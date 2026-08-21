@@ -1,6 +1,7 @@
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
 import { findWikilinks } from "./wiki-syntax-extension.js";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 class WikilinkPreviewWidget extends WidgetType {
   constructor(label, target) {
@@ -90,6 +91,7 @@ function buildWikilinkDecorations(state) {
   const builder = new RangeSetBuilder();
   const doc = state.doc;
   const skipLines = codeBlockLines(doc);
+  const readOnly = state.field(readOnlyState);
 
   for (let n = 1; n <= doc.lines; n++) {
     if (skipLines.has(n)) continue;
@@ -98,7 +100,7 @@ function buildWikilinkDecorations(state) {
     const wikilinks = findWikilinks(line.text);
     if (!wikilinks.length) continue;
 
-    if (isLineActive(state, n)) {
+    if (!readOnly && isLineActive(state, n)) {
       for (const link of wikilinks) {
         builder.add(
           line.from + link.from,
@@ -128,7 +130,7 @@ const wikilinkPreviewField = StateField.define({
     return buildWikilinkDecorations(state);
   },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) {
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) {
       return buildWikilinkDecorations(tr.state);
     }
     return deco.map(tr.changes);

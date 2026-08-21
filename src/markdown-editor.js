@@ -5,7 +5,7 @@ import { html } from "@codemirror/lang-html";
 import { syntaxHighlighting, LanguageDescription } from "@codemirror/language";
 import { classHighlighter } from "@lezer/highlight";
 import { autocompletion, completionKeymap } from "@codemirror/autocomplete";
-import { RangeSetBuilder, EditorSelection } from "@codemirror/state";
+import { RangeSetBuilder, EditorSelection, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 
 // Load CSS variables and theme styles
@@ -23,6 +23,7 @@ import headingField from "./heading-plugin.js";
 import chartBlockField from "./chart-block-plugin.js";
 import networkBlockField from "./network-block-plugin.js";
 import renderedBlockKeymap from "./rendered-block-keymap.js";
+import { readOnlyState, setReadOnly } from "./read-only-state.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -182,12 +183,22 @@ class MarkdownEditor extends DataroomElement {
     // so that the initial text doesn't render alongside the editor widget.
     this.innerHTML = "";
 
+    // Read-only mode is toggled via the read-only attribute. When present,
+    // the editor content cannot be edited, but rendered widgets remain interactive.
+    const readOnly = this.hasAttribute("read-only");
+    const editableCompartment = new Compartment();
+
     // Create the editor view
     this.view = new EditorView({
       parent: this,
       doc: initialDoc,
       extensions: [
         minimalSetup,
+        // Track read-only state so plugins can keep widgets interactive while
+        // disabling direct text editing.
+        readOnlyState,
+        // Toggle DOM editability live via a compartment.
+        editableCompartment.of(EditorView.editable.of(!readOnly)),
         // Initialize the Markdown language support with fenced code language highlighting
         // Include explicit JavaScript support so fenced ```js/```javascript blocks get completions
         markdown({
@@ -273,6 +284,9 @@ class MarkdownEditor extends DataroomElement {
         // Handle image drag-and-drop
         EditorView.domEventHandlers({
           drop: (event, view) => {
+            // Don't allow image drops to modify the document in read-only mode.
+            if (this.hasAttribute("read-only")) return false;
+
             const files = Array.from(event.dataTransfer.files);
             const imageFiles = files.filter(file => file.type.startsWith('image/'));
             
@@ -292,6 +306,8 @@ class MarkdownEditor extends DataroomElement {
           dragover: (event) => {
             // Check if dragged items include files
             if (event.dataTransfer.types.includes('Files')) {
+              // Don't advertise the editor as a drop target in read-only mode.
+              if (this.hasAttribute("read-only")) return false;
               event.preventDefault();
               return true;
             }
@@ -299,6 +315,28 @@ class MarkdownEditor extends DataroomElement {
           }
         }),
       ],
+    });
+
+    // Apply a host class so consumers can style read-only mode.
+    this.classList.toggle("read-only", readOnly);
+
+    // Sync the read-only state field with the initial attribute value.
+    if (readOnly) {
+      this.view.dispatch({ effects: setReadOnly.of(true) });
+    }
+
+    // React to live changes of the read-only attribute.
+    this.addEventListener("NODE-CHANGED", (event) => {
+      if (event.detail?.attribute !== "read-only") return;
+      const nowReadOnly = this.hasAttribute("read-only");
+      this.classList.toggle("read-only", nowReadOnly);
+      if (!this.view) return;
+      this.view.dispatch({
+        effects: [
+          setReadOnly.of(nowReadOnly),
+          editableCompartment.reconfigure(EditorView.editable.of(!nowReadOnly)),
+        ],
+      });
     });
   }
 

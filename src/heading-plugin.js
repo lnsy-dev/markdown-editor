@@ -24,6 +24,7 @@
 
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 // ---------------------------------------------------------------------------
 // Regex helpers
@@ -97,6 +98,7 @@ function buildDecorations(state) {
   const builder = new RangeSetBuilder();
   const doc     = state.doc;
   const skipLines = codeBlockLineNumbers(doc);
+  const readOnly = state.field(readOnlyState);
 
   // Collect all entries and sort before feeding to RangeSetBuilder, which
   // requires strictly non-decreasing `from` order.
@@ -121,7 +123,7 @@ function buildDecorations(state) {
       order: 0,
     });
 
-    if (!active) {
+    if (!active || readOnly) {
       // Hide the `# ` prefix with a zero-width widget replacement
       const prefixFrom = line.from;
       const prefixTo   = line.from + prefixStr.length;
@@ -152,7 +154,7 @@ function buildDecorations(state) {
 const headingField = StateField.define({
   create(state)    { return buildDecorations(state); },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) return buildDecorations(tr.state);
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) return buildDecorations(tr.state);
     return deco.map(tr.changes);
   },
   provide: (f) => EditorView.decorations.from(f),

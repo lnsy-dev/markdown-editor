@@ -1,5 +1,6 @@
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 /**
  * Maps each todo marker character to a unicode symbol and a CSS class.
@@ -215,6 +216,7 @@ function isLineActive(state, lineNum) {
 function buildDecorations(state) {
   const builder = new RangeSetBuilder();
   const doc = state.doc;
+  const readOnly = state.field(readOnlyState);
 
   for (let n = 1; n <= doc.lines; n++) {
     const line = doc.line(n);
@@ -237,7 +239,7 @@ function buildDecorations(state) {
     const markerFrom = line.from + leadLen;      // position of "x"
     const markerTo   = markerFrom + 1;           // position after "x"
 
-    if (isLineActive(state, n)) {
+    if (!readOnly && isLineActive(state, n)) {
       // Line is being edited — show a mark over the raw `- [x]` text.
       builder.add(
         dashFrom,
@@ -248,6 +250,7 @@ function buildDecorations(state) {
     }
 
     // Replace `- [x]` with the unicode widget, preserving indentation.
+    // In read-only mode the widget stays interactive.
     builder.add(
       dashFrom,
       closeBracketTo,
@@ -267,7 +270,7 @@ const todoDecorationField = StateField.define({
     return buildDecorations(state);
   },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) {
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) {
       return buildDecorations(tr.state);
     }
     return deco.map(tr.changes);

@@ -1,5 +1,6 @@
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 /** Matches ![[name|data:image/...;base64,...]] or ![[data:image/...;base64,...]] */
 export const WIKI_IMAGE_RE =
@@ -56,13 +57,14 @@ function buildImageDecorations(state) {
   const builder = new RangeSetBuilder();
   const doc = state.doc;
   const activeLineNum = doc.lineAt(state.selection.main.head).number;
+  const readOnly = state.field(readOnlyState);
 
   for (let n = 1; n <= doc.lines; n++) {
     const line = doc.line(n);
     const parsed = parseWikiImage(line.text);
     if (!parsed) continue;
 
-    if (line.number === activeLineNum) {
+    if (!readOnly && line.number === activeLineNum) {
       // Show raw syntax only while the line is being edited
       builder.add(
         line.from,
@@ -70,7 +72,8 @@ function buildImageDecorations(state) {
         Decoration.line({ class: "cm-wiki-image-line cm-wiki-image-editing" }),
       );
     } else {
-      // Replace the wikilink line entirely with the image preview
+      // Replace the wikilink line entirely with the image preview.
+      // In read-only mode the image stays rendered.
       builder.add(
         line.from,
         line.to,
@@ -90,7 +93,7 @@ const imageEmbedField = StateField.define({
     return buildImageDecorations(state);
   },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) {
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) {
       return buildImageDecorations(tr.state);
     }
     return deco.map(tr.changes);

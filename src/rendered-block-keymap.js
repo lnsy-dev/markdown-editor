@@ -1,15 +1,20 @@
 /**
  * rendered-block-keymap.js
  *
- * Allows arrow-key navigation into fenced code blocks that are currently
- * rendered as widgets (chart/network). CodeMirror treats replace decorations
- * as atomic, so the default arrow behaviour skips over them. This keymap
- * detects when the cursor is immediately above or below a rendered block and
- * jumps the selection inside the block, which triggers the editing view.
+ * Allows arrow-key navigation into and out of fenced code blocks that are
+ * currently rendered as widgets (chart/network). CodeMirror treats replace
+ * decorations as atomic, so the default arrow behaviour skips over them. This
+ * keymap detects block boundaries and moves the cursor across them.
+ *
+ * When a boundary is crossed the block's visual height changes (widget <-> raw
+ * source), which normally makes the viewport jump. We keep the cursor at the
+ * same screen position by compensating the scroll position for the layout
+ * change, so the active line stays visually anchored.
  */
 
 import { EditorSelection, Prec } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
+import { readOnlyState } from "./read-only-state.js";
 
 const FENCE_RE = /^\s*```+\s*(\S*)\s*$/;
 
@@ -45,6 +50,28 @@ function findRenderedBlocks(doc) {
   return blocks;
 }
 
+/**
+ * Dispatch a cursor move and then adjust the scroll position so that the
+ * cursor stays at the same vertical screen coordinate. This prevents the
+ * viewport from jumping when the widget/source swap changes the document
+ * layout around the active line.
+ */
+function dispatchPreservingCursor(view, newPos) {
+  const oldPos = view.state.selection.main.head;
+  const oldLine = view.lineBlockAt(oldPos);
+
+  view.dispatch({
+    selection: EditorSelection.cursor(newPos),
+  });
+
+  const newLine = view.lineBlockAt(newPos);
+  const delta = newLine.top - oldLine.top;
+
+  if (Math.abs(delta) > 1) {
+    view.scrollDOM.scrollTop += delta;
+  }
+}
+
 function moveIntoBlock(view, direction) {
   const state = view.state;
   const doc = state.doc;
@@ -54,7 +81,7 @@ function moveIntoBlock(view, direction) {
 
   if (blocks.length === 0) return false;
 
-  // If the cursor is already inside a chart/network block, let the default
+  // If the cursor is already inside a rendered block, let the default
   // arrow behaviour handle movement within the raw source.
   const containingBlock = blocks.find((b) => b.from <= cursorPos && cursorPos <= b.to);
   if (containingBlock) return false;
@@ -86,22 +113,64 @@ function moveIntoBlock(view, direction) {
     return false;
   }
 
-  view.dispatch({
-    selection: EditorSelection.cursor(destinationLine.from),
-    scrollIntoView: true,
-  });
+  dispatchPreservingCursor(view, destinationLine.from);
   return true;
+}
+
+function moveOutOfBlock(view, direction, block) {
+  const doc = view.state.doc;
+  const blockFirstLine = doc.lineAt(block.from).number;
+  const blockLastLine = doc.lineAt(block.to).number;
+
+  const targetLineNum =
+    direction === -1
+      ? Math.max(blockFirstLine - 1, 1)
+      : Math.min(blockLastLine + 1, doc.lines);
+
+  dispatchPreservingCursor(view, doc.line(targetLineNum).from);
+  return true;
+}
+
+function moveVertical(view, direction) {
+  if (view.state.field(readOnlyState)) return false;
+
+  const state = view.state;
+  const doc = state.doc;
+  const cursorPos = state.selection.main.head;
+  const cursorLine = doc.lineAt(cursorPos).number;
+  const blocks = findRenderedBlocks(doc);
+
+  if (blocks.length === 0) return false;
+
+  const containingBlock = blocks.find((b) => b.from <= cursorPos && cursorPos <= b.to);
+
+  if (containingBlock) {
+    const blockFirstLine = doc.lineAt(containingBlock.from).number;
+    const blockLastLine = doc.lineAt(containingBlock.to).number;
+
+    const atTopBoundary = direction === -1 && cursorLine <= blockFirstLine + 1;
+    const atBottomBoundary = direction === 1 && cursorLine >= blockLastLine - 1;
+
+    if (atTopBoundary || atBottomBoundary) {
+      return moveOutOfBlock(view, direction, containingBlock);
+    }
+
+    // Not at a boundary: use CodeMirror's default movement within the block.
+    return false;
+  }
+
+  return moveIntoBlock(view, direction);
 }
 
 export const renderedBlockKeymap = Prec.highest(
   keymap.of([
     {
       key: "ArrowDown",
-      run: (view) => moveIntoBlock(view, 1),
+      run: (view) => moveVertical(view, 1),
     },
     {
       key: "ArrowUp",
-      run: (view) => moveIntoBlock(view, -1),
+      run: (view) => moveVertical(view, -1),
     },
   ]),
 );

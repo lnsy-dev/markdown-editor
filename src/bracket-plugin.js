@@ -19,6 +19,7 @@
 
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 // ---------------------------------------------------------------------------
 // Regex patterns
@@ -179,6 +180,7 @@ function buildDecorations(state) {
   const builder = new RangeSetBuilder();
   const doc = state.doc;
   const skipLines = codeBlockLines(doc);
+  const readOnly = state.field(readOnlyState);
 
   // We need to add decorations in document order (ascending from position).
   // Collect all entries first, then sort, then add.
@@ -198,7 +200,7 @@ function buildDecorations(state) {
       const from = line.from + match.index;
       const to = line.from + match.index + match[0].length;
 
-      if (active) {
+      if (active && !readOnly) {
         // Show raw text with an editing style mark.
         entries.push({
           from,
@@ -207,7 +209,7 @@ function buildDecorations(state) {
           isReplace: false,
         });
       } else {
-        // Hide the entire bracket expression.
+        // Hide the entire bracket expression (read-only keeps it hidden).
         entries.push({
           from,
           to,
@@ -224,7 +226,7 @@ function buildDecorations(state) {
       const to = line.from + match.index + match[0].length;
       const id = match[1];
 
-      if (active) {
+      if (active && !readOnly) {
         // Show raw [^id] text with an editing style mark.
         entries.push({
           from,
@@ -233,7 +235,7 @@ function buildDecorations(state) {
           isReplace: false,
         });
       } else {
-        // Replace with the superscript widget.
+        // Replace with the superscript widget (read-only keeps it interactive).
         entries.push({
           from,
           to,
@@ -264,7 +266,7 @@ const bracketField = StateField.define({
     return buildDecorations(state);
   },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) {
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) {
       return buildDecorations(tr.state);
     }
     return deco.map(tr.changes);

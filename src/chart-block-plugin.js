@@ -9,6 +9,7 @@
 import { StateField, RangeSetBuilder } from "@codemirror/state";
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
 import { load as yamlLoad } from "js-yaml";
+import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 // Ensure the custom element is registered for rendered widgets.
 import "dataroom-charts/src/dataroom-chart.js";
@@ -138,9 +139,10 @@ function buildDecorations(state) {
   const builder = new RangeSetBuilder();
   const doc = state.doc;
   const blocks = findChartBlocks(doc);
+  const readOnly = state.field(readOnlyState);
 
   for (const block of blocks) {
-    if (isSelectionInBlock(state, block)) {
+    if (!readOnly && isSelectionInBlock(state, block)) {
       // Active block: show raw source and add an editing class to the
       // opening fence so the user can see it is editable.
       const firstLine = doc.lineAt(block.from);
@@ -152,7 +154,8 @@ function buildDecorations(state) {
       continue;
     }
 
-    // Inactive block: replace the entire fence with a rendered widget.
+    // Inactive block (or read-only mode): replace the entire fence with a
+    // rendered widget that stays interactive.
     builder.add(
       block.from,
       block.to,
@@ -175,7 +178,7 @@ const chartBlockField = StateField.define({
     return buildDecorations(state);
   },
   update(deco, tr) {
-    if (tr.docChanged || tr.selection) {
+    if (tr.docChanged || tr.selection || readOnlyChanged(tr)) {
       return buildDecorations(tr.state);
     }
     return deco.map(tr.changes);
