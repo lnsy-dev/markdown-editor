@@ -3,7 +3,7 @@
  * 
  * Transforms ```chart blocks containing YAML data into dataroom-chart elements
  */
-import yaml from 'js-yaml';
+import { load as yamlLoad } from 'js-yaml';
 
 /**
  * Chart block plugin for markdown-it
@@ -22,7 +22,7 @@ export default function chartPlugin(md) {
     if (info === 'chart') {
       try {
         // Parse YAML content
-        const chartConfig = yaml.load(token.content);
+        const chartConfig = yamlLoad(token.content);
         
         // Convert chart config to dataroom-chart attributes
         const attrs = [];

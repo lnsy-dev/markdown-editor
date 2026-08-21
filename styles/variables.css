@@ -44,6 +44,8 @@
 
   --bg-color: var(--color-bg);
   --fg-color: var(--color-text);
+  --background-color: var(--color-bg);
+  --foreground-color: var(--color-text);
   --link-color: var(--color-link);
 
   --font-size:   var(--type-body);

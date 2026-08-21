@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project</title>
-  <script type="module" src="./dist/markdown-editor.min.js"></script>
+  <script type="module" src="/markdown-editor.min.js"></script>
   <style>
     body {
       background-color: var(--bg-color, #f2ece2);
@@ -70,6 +70,81 @@ for (let test of testCollection) {
 > keep looking. Don't settle.
 >
 > — Steve Jobs, Stanford Commencement Address, 2005
+
+## Charts
+
+```chart
+type: bar
+width: 500
+height: 300
+data:
+  - label: "A"
+    value: 30
+    color: "#ff6b6b"
+  - label: "B"
+    value: 80
+    color: "#4ecdc4"
+  - label: "C"
+    value: 45
+    color: "#45b7d1"
+  - label: "D"
+    value: 60
+    color: "#96ceb4"
+```
+
+```chart
+type: line
+width: 500
+height: 300
+lineWidth: 3
+data:
+  - x: 1
+    y: 10
+    c: "series1"
+  - x: 2
+    y: 25
+    c: "series1"
+  - x: 3
+    y: 15
+    c: "series1"
+  - x: 4
+    y: 30
+    c: "series1"
+  - x: 1
+    y: 5
+    c: "series2"
+  - x: 2
+    y: 15
+    c: "series2"
+  - x: 3
+    y: 25
+    c: "series2"
+  - x: 4
+    y: 20
+    c: "series2"
+```
+
+## Network
+
+```network
+---
+scale: 0.3
+---
+JavaScript:
+  # EcmaScript (aka JavaScript)
+  The single most used programming language on earth.
+CSS:
+  # Cascading Style Sheets (CSS)
+  CSS is as complex as it is beautiful.
+HTML:
+  # HTML
+  HTML has become extensible with Custom HTML Elements.
+
+---
+(JavaScript|wireframe:true;shape:torus) --> (HTML|wireframe:true;shape:cube)
+(CSS|wireframe:true) --> (HTML|wireframe:true)
+(JavaScript) --> (HTML)
+```
 
 ## Footnotes & Citations
 

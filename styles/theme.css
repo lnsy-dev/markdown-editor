@@ -772,3 +772,55 @@ cite.cm-blockquote-cite::before {
   color: var(--fg-color);
   font-size: 0.9em;
 }
+
+/* ── Chart and Network code block widgets ───────────────────────────────── */
+
+.cm-chart-widget,
+.cm-network-widget {
+  display: block;
+  text-shadow: none;
+  background-color: var(--bg-color);
+  cursor: default;
+}
+
+.cm-chart-widget {
+  margin: var(--rhythm-md, 1.5rem) 0;
+}
+
+.cm-network-widget {
+  margin: var(--rhythm-xs, 0.5rem) 0 var(--rhythm-sm, 1rem);
+}
+
+.cm-chart-widget dataroom-chart,
+.cm-network-widget network-visualization {
+  display: block;
+  max-width: 100%;
+}
+
+/* The network visualization defaults to a 1:1 square, which leaves a lot of
+   empty space above small graphs. Use a wider ratio so the graph fills the
+   rendered block more naturally. */
+.cm-network-widget network-visualization {
+  aspect-ratio: 4 / 3;
+}
+
+.cm-chart-widget dataroom-chart pre,
+.cm-chart-widget dataroom-chart code {
+  display: none;
+}
+
+.cm-chart-widget-error,
+.cm-network-widget-error {
+  padding: 1rem;
+  color: #c33;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  font-family: var(--heading-font-family);
+  font-size: 0.9em;
+}
+
+.cm-line.cm-chart-block-editing,
+.cm-line.cm-network-block-editing {
+  background-color: var(--code-background-color);
+}

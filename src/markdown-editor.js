@@ -20,6 +20,9 @@ import todoDecorationField from "./todo-checkbox-plugin.js";
 import bracketField from "./bracket-plugin.js";
 import blockquoteField from "./blockquote-plugin.js";
 import headingField from "./heading-plugin.js";
+import chartBlockField from "./chart-block-plugin.js";
+import networkBlockField from "./network-block-plugin.js";
+import renderedBlockKeymap from "./rendered-block-keymap.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -224,7 +227,13 @@ class MarkdownEditor extends DataroomElement {
         blockquoteField,
         // Headings: # prefix hidden when inactive, revealed on active line
         headingField,
-        
+        // Chart code blocks: rendered as <dataroom-chart> when inactive
+        chartBlockField,
+        // Network code blocks: rendered as <network-visualization> when inactive
+        networkBlockField,
+        // Arrow-key navigation into rendered chart/network blocks
+        renderedBlockKeymap,
+
         // Use CSS classes for token highlighting
         syntaxHighlighting(classHighlighter),
         // Enable line wrapping
