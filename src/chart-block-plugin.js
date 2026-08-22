@@ -12,7 +12,7 @@ import { load as yamlLoad } from "js-yaml";
 import { readOnlyState, readOnlyChanged } from "./read-only-state.js";
 
 // Ensure the custom element is registered for rendered widgets.
-import "dataroom-charts/src/dataroom-chart.js";
+import "@lnsy/charts/src/dataroom-chart.js";
 
 // ---------------------------------------------------------------------------
 // Helpers

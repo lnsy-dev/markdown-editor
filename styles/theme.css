@@ -1,10 +1,3 @@
-markdown-editor {
-  margin: auto;
-  display: block;
-  overflow: hidden;
-  max-width: 720px;
-}
-
 .cm-editor {
   background-color: var(--bg-color);
   color: var(--fg-color);
@@ -25,8 +18,8 @@ markdown-editor {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-shadow:
-    -0.5px -0.5px 0 rgba(0, 0, 0, 0.40),
-     0.5px  0.5px 0 rgba(255, 255, 255, 1);
+    -0.5px -0.5px 0 var(--editor-text-shadow-dark, rgba(0, 0, 0, 0.40)),
+     0.5px  0.5px 0 var(--editor-text-shadow-light, rgba(255, 255, 255, 1));
   border-bottom: 1px solid var(--color-rule);
 }
 
@@ -82,7 +75,7 @@ markdown-editor {
 
 .cm-focused .cm-matchingBracket,
 .cm-focused .cm-surround {
-  background-color: rgba(228, 25, 28, 0.12);
+  background-color: var(--match-bracket-bg, rgba(228, 25, 28, 0.12));
   color: var(--fg-color);
 }
 
@@ -229,7 +222,7 @@ markdown-editor {
   background-color: var(--bg-color) !important;
   border: 1px solid var(--color-rule) !important;
   border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--tooltip-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
   font-family: var(--body-font-family);
   font-size: var(--font-size);
   text-shadow: none;
@@ -436,15 +429,15 @@ markdown-editor {
 }
 
 .cm-selectionBackground {
-  background-color: rgba(228, 25, 28, 0.18) !important;
+  background-color: var(--selection-bg, rgba(228, 25, 28, 0.18)) !important;
 }
 
 .cm-focused .cm-selectionBackground {
-  background-color: rgba(228, 25, 28, 0.25) !important;
+  background-color: var(--selection-focused-bg, rgba(228, 25, 28, 0.25)) !important;
 }
 
 .cm-content ::selection {
-  background-color: rgba(228, 25, 28, 0.25);
+  background-color: var(--selection-focused-bg, rgba(228, 25, 28, 0.25));
 }
 
 /* Embedded wiki images — source hidden via Decoration.replace when not editing */
@@ -624,7 +617,7 @@ sup.cm-citation {
  * The anchor inside the superscript.
  */
 sup.cm-citation .cm-citation-link {
-  color: red;
+  color: var(--color-link);
   text-decoration: none;
   cursor: pointer;
   font-weight: 400;
@@ -640,7 +633,7 @@ sup.cm-citation .cm-citation-link:hover {
  * a reference even in its raw form.
  */
 .cm-citation-editing {
-  color: red;
+  color: var(--color-link);
   opacity: 0.7;
   font-size: 0.85em;
   vertical-align: super;
@@ -656,7 +649,7 @@ sup.cm-citation .cm-citation-link:hover {
 .cm-line.cm-blockquote-line {
   padding-left: var(--rhythm-md);
   font-style: italic;
-  color: #444;
+  color: var(--color-text);
 }
 
 .cm-line.cm-blockquote-first {
@@ -685,7 +678,7 @@ cite.cm-blockquote-cite {
   font-variant: small-caps;
   font-size: 0.9em;
   letter-spacing: 0.02em;
-  color: #666;
+  color: var(--color-muted);
 }
 
 cite.cm-blockquote-cite::before {
@@ -709,7 +702,7 @@ cite.cm-blockquote-cite::before {
 .cm-line.cm-blockquote-editing {
   padding-left: var(--rhythm-md);
   font-style: italic;
-  color: #444;
+  color: var(--color-text);
 }
 
 /* ── Todo state dropdown ──────────────────────────────────────────────────── */
@@ -727,7 +720,7 @@ cite.cm-blockquote-cite::before {
   background-color: var(--bg-color);
   border: 1px solid var(--color-rule);
   border-radius: 4px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  box-shadow: var(--dropdown-shadow, 0 4px 16px rgba(0, 0, 0, 0.14));
   font-family: var(--body-font-family);
   font-size: var(--font-size);
   text-shadow: none;
@@ -825,9 +818,9 @@ cite.cm-blockquote-cite::before {
 .cm-chart-widget-error,
 .cm-network-widget-error {
   padding: 1rem;
-  color: #c33;
-  background-color: #fee;
-  border: 1px solid #fcc;
+  color: var(--error-text-color, #c33);
+  background-color: var(--error-bg-color, #fee);
+  border: 1px solid var(--error-border-color, #fcc);
   border-radius: 4px;
   font-family: var(--heading-font-family);
   font-size: 0.9em;

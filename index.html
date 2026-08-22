@@ -6,6 +6,106 @@
   <title>Project</title>
   <script type="module" src="/markdown-editor.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@200..800&family=EB+Garamond:ital,wght@0,400;1,400&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+    :root {
+      /* Palette — warm paper */
+      --color-bg:        #f2ece2;
+      --color-text:      #444;
+      --color-heading:   #444;
+      --color-link:      #E4191C;
+      --color-link-hover:#9F1113;
+      --color-rule:      rgba(0, 0, 0, 0.12);
+      --color-muted:     #666;
+      --color-tagline:   #555;
+
+      /* Modular scale (minor third, 1.2 ratio) */
+      --type-body:   1.25rem;
+      --type-h3:     1.5rem;
+      --type-h2:     1.8rem;
+      --type-h1:     2.16rem;
+
+      /* Leading */
+      --leading-body:    1.4;
+      --leading-heading: 1.15;
+
+      /* Spacing rhythm */
+      --rhythm-xs:  0.5rem;
+      --rhythm-sm:  1rem;
+      --rhythm-md:  1.5rem;
+
+      /* Typography families */
+      --body-font-family:    'EB Garamond', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+      --heading-font-family: "Roboto Condensed", sans-serif;
+      --code-font-family:    'Atkinson Hyperlegible Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+
+      /* Legacy aliases consumed by theme.css */
+      --bg:  var(--color-bg);
+      --fg:  var(--color-text);
+
+      --bg-color: var(--color-bg);
+      --fg-color: var(--color-text);
+      --background-color: var(--color-bg);
+      --foreground-color: var(--color-text);
+      --link-color: var(--color-link);
+
+      --font-size:   var(--type-body);
+      --line-height: var(--leading-body);
+
+      --md-h1-size: var(--type-h1);
+      --md-h2-size: var(--type-h2);
+      --md-h3-size: var(--type-h3);
+      --md-h4-size: calc(var(--type-body) * 1.2);
+      --md-h5-size: var(--type-body);
+      --md-h6-size: calc(var(--type-body) * 0.9);
+
+      /* UI accents — subtle, no heavy borders */
+      --darker-neutral-color:     rgba(0, 0, 0, 0.04);
+      --neutral-bg-color:         rgba(0, 0, 0, 0.03);
+      --lighter-neutral-bg-color: rgba(0, 0, 0, 0.02);
+      --lightest-neutral-bg-color:rgba(0, 0, 0, 0.02);
+      --neutral-fg-color:         var(--color-muted);
+
+      --highlight-color: var(--color-link);
+      --secondary-color: var(--color-muted);
+      --trinary-color:   var(--color-tagline);
+      --quaternary-color:var(--color-rule);
+
+      --error-color:   var(--color-link-hover);
+      --warning-color: #c47a00;
+      --confirm-color: #3d6b3d;
+
+      /* Syntax token colors — greyscale palette, red reserved for comments */
+      --code-foreground-color:        #3a3a3a;
+      --code-background-color:        rgba(0, 0, 0, 0.02);
+      --code-background-color-darker: rgba(0, 0, 0, 0.04);
+      --code-highlight-color:         var(--color-link);
+      --code-neutral-color:           var(--color-link);
+      --code-color-2:                 #4a4a4a;
+      --code-color-3:                 #7a7a7a;
+      --code-color-4:                 #9a9a9a;
+      --code-color-5:                 #5a5a5a;
+      --code-color-6:                 #8a8a8a;
+      --code-secondary-highlight-color: #6a6a6a;
+
+      /* Markdown line decorations */
+      --md-hr-line-bg:       var(--color-rule);
+      --md-aside-fence-bg:   rgba(0, 0, 0, 0.02);
+      --md-aside-bg:         rgba(0, 0, 0, 0.02);
+
+      /* Values previously hardcoded in the component theme */
+      --editor-text-shadow-dark:  rgba(0, 0, 0, 0.40);
+      --editor-text-shadow-light: rgba(255, 255, 255, 1);
+      --match-bracket-bg:         rgba(228, 25, 28, 0.12);
+      --selection-bg:             rgba(228, 25, 28, 0.18);
+      --selection-focused-bg:     rgba(228, 25, 28, 0.25);
+      --tooltip-shadow:           0 2px 8px rgba(0, 0, 0, 0.08);
+      --dropdown-shadow:          0 4px 16px rgba(0, 0, 0, 0.14);
+      --error-text-color:         #c33;
+      --error-bg-color:           #fee;
+      --error-border-color:       #fcc;
+    }
+
     body {
       background-color: var(--bg-color, #f2ece2);
       color: var(--fg-color, #444);
@@ -15,11 +115,13 @@
     }
 
     markdown-editor {
+      display: block;
+      margin: auto;
+      overflow: hidden;
       box-sizing: content-box;
       max-width: 720px;
       padding: 0 var(--rhythm-md, 1.5rem);
     }
-
   </style>
 
 

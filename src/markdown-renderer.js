@@ -8,7 +8,7 @@ import MarkdownIt from 'markdown-it';
 import chartPlugin from './chart-plugin.js';
 
 // Import dataroom-chart to ensure it's registered
-import 'dataroom-charts/src/dataroom-chart.js';
+import '@lnsy/charts/src/dataroom-chart.js';
 
 class MarkdownRenderer extends DataroomElement {
   
