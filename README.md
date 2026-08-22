@@ -99,6 +99,42 @@ Some initial content here. It will be normalized (dedented and without leading/t
 ```
 
 
+### Autocomplete attributes
+
+You can configure symbol-triggered autocomplete by providing attributes in the form `symbol;url`. The URL should return JSON containing an array of strings or objects:
+
+```html
+<markdown-editor
+  autocomplete--atsymbol="@;./mentions.json"
+  autocomplete-poundsign="#;./tags.json">
+Type @ or # to see suggestions.
+</markdown-editor>
+```
+
+Supported attributes:
+
+- `autocomplete--atsymbol` — triggers autocomplete after typing `@`
+- `autocomplete-atsymbol` — fallback form for `@`
+- `autocomplete-poundsign` — triggers autocomplete after typing `#`
+
+Endpoint JSON shape:
+
+```json
+["alice", "bob", "charlie"]
+```
+
+Or with labels and values:
+
+```json
+[
+  { "label": "Alice", "value": "alice" },
+  { "label": "Bob", "value": "bob" }
+]
+```
+
+When no autocomplete attributes are present, the editor falls back to the default CodeMirror completions (e.g. HTML tag/attribute completions from the built-in HTML support).
+
+
 ## Programmatic API
 
 The element provides convenience methods for common operations, as well as direct access to the CodeMirror EditorView instance (el.view) for advanced use.
