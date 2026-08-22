@@ -160,5 +160,18 @@ For academic-style citations, reference a source inline like this[^smith2024] or
 
   </markdown-editor>
 
+  <section style="max-width: 720px; margin: 2rem auto; padding: 0 1.5rem;">
+    <h2>Sparklines</h2>
+    <p style="font-size: 1.2rem;">
+      Sales were <spark-line values="12,15,13,14,12,11,12"></spark-line> this quarter,
+      while traffic grew <spark-line values="5,8,7,12,15,14,18"></spark-line> over the same period.
+    </p>
+    <p>
+      Inline sparklines inherit the surrounding text color and scale with the font size:
+      <span style="color: #c0392b;"><spark-line values="3,5,4,7,6,8,9"></spark-line></span>
+      <span style="color: #2980b9;"><spark-line values="9,6,8,5,7,4,3"></spark-line></span>
+    </p>
+  </section>
+
 </body>
 </html>

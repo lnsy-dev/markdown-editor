@@ -23,6 +23,7 @@ import headingField from "./heading-plugin.js";
 import chartBlockField from "./chart-block-plugin.js";
 import networkBlockField from "./network-block-plugin.js";
 import renderedBlockKeymap from "./rendered-block-keymap.js";
+import "@lnsy/spark-line";
 import { readOnlyState, setReadOnly } from "./read-only-state.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
