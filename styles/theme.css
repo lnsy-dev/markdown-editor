@@ -459,6 +459,24 @@
   opacity: 0.85;
 }
 
+.cm-hashtag-preview,
+.cm-reference-preview {
+  color: var(--secondary-color);
+  cursor: pointer;
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+}
+
+.cm-hashtag-preview:hover,
+.cm-reference-preview:hover {
+  opacity: 0.75;
+}
+
+.cm-hashtag-editing,
+.cm-reference-editing {
+  opacity: 0.85;
+}
+
 .cm-embedded-image {
   display: block;
   margin: var(--rhythm-xs, 0.5rem) 0 var(--rhythm-sm, 1rem);

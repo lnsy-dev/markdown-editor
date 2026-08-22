@@ -15,7 +15,7 @@ import "../styles/theme.css";
 import DataroomElement from 'dataroom-js'
 import imageEmbedHighlighter, { formatWikiImage } from "./image-embed-plugin.js";
 import { wikiSyntaxExtensions } from "./wiki-syntax-extension.js";
-import wikilinkPreview from "./wikilink-preview-plugin.js";
+import clickablePreview from "./clickable-preview-plugin.js";
 import todoDecorationField from "./todo-checkbox-plugin.js";
 import bracketField from "./bracket-plugin.js";
 import blockquoteField from "./blockquote-plugin.js";
@@ -25,6 +25,7 @@ import networkBlockField from "./network-block-plugin.js";
 import renderedBlockKeymap from "./rendered-block-keymap.js";
 import "@lnsy/spark-line";
 import { readOnlyState, setReadOnly } from "./read-only-state.js";
+import { buildAutocompleteExtension } from "./autocomplete-plugin.js";
 
 // Highlight entire lines that contain only '---', fenced code blocks (```), and asides (:::) across full lines
 const lineDeco = (cls) => Decoration.line({ class: cls });
@@ -214,8 +215,8 @@ class MarkdownEditor extends DataroomElement {
         }),
         // Enable HTML language support for embedded HTML
         html(),
-        // Enable autocompletion with HTML completions
-        autocompletion(),
+        // Enable autocompletion with HTML completions and optional symbol completions
+        this.buildAutocompleteExtension(),
         // Add completion keybindings (Ctrl-Space to trigger)
         keymap.of(completionKeymap),
         // Bind Tab to insert two spaces instead of a tab character
@@ -229,8 +230,9 @@ class MarkdownEditor extends DataroomElement {
         hrLineHighlighter,
         // Embedded wiki images with inline preview
         imageEmbedHighlighter,
-        // Wikilinks show label only until their line is active
-        wikilinkPreview,
+        // Clickable inline references (wikilinks, hashtags, @-mentions)
+        // render as widgets on inactive lines and emit click events.
+        clickablePreview,
         // Todo markers: - [ ] / [x] / [/] etc. → unicode symbols
         todoDecorationField,
         // Bracket fields [key:: value] and citations [^id]
@@ -335,6 +337,25 @@ class MarkdownEditor extends DataroomElement {
         ],
       });
     });
+  }
+
+  /**
+   * Builds the autocompletion extension from element attributes.
+   * Supported attributes (value format: "symbol;url"):
+   *   - autocomplete--atsymbol
+   *   - autocomplete-atsymbol (fallback)
+   *   - autocomplete-poundsign
+   *   - autocomplate-poundsign (typo fallback)
+   * @returns {import("@codemirror/state").Extension}
+   */
+  buildAutocompleteExtension() {
+    const configValues = [
+      this.getAttribute("autocomplete--atsymbol"),
+      this.getAttribute("autocomplete-atsymbol"),
+      this.getAttribute("autocomplete-poundsign"),
+      this.getAttribute("autocomplate-poundsign"),
+    ];
+    return buildAutocompleteExtension(configValues) || autocompletion();
   }
 
   /**

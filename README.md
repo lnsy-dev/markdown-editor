@@ -231,6 +231,38 @@ el.addEventListener("WIKILINK-CLICKED", (evt) => {
 });
 ```
 
+### HASHTAG-CLICKED
+
+Fires when a user clicks a hashtag (`#tag`) on an **inactive** line. The line does not become active — clicking navigates rather than editing, mirroring the wikilink behaviour.
+
+Event detail properties:
+- `tag` (string): The tag text without the leading `#`
+
+```js
+const el = document.querySelector("markdown-editor");
+el.addEventListener("HASHTAG-CLICKED", (evt) => {
+  const { tag } = evt.detail;
+  console.log(`Hashtag clicked: #${tag}`);
+  // Filter by tag, open a tag page, etc.
+});
+```
+
+### REFERENCE-CLICKED
+
+Fires when a user clicks an `@` reference (`@mention`) on an **inactive** line. The line does not become active — clicking navigates rather than editing, mirroring the wikilink behaviour.
+
+Event detail properties:
+- `reference` (string): The reference text without the leading `@`
+
+```js
+const el = document.querySelector("markdown-editor");
+el.addEventListener("REFERENCE-CLICKED", (evt) => {
+  const { reference } = evt.detail;
+  console.log(`Reference clicked: @${reference}`);
+  // Open a profile, mention detail view, etc.
+});
+```
+
 ### IMAGE-DROPPED
 
 Fires when an image file is dropped onto the editor. The event detail contains image metadata and a data URL.

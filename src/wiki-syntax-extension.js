@@ -5,10 +5,12 @@ export const WIKILINK_INLINE_RE = /(?<!!)\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
 const WIKILINK_RE = /^\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/;
 
 /** Inline #tag (not ATX headings — those are parsed at block level) */
+export const HASHTAG_INLINE_RE = /(?<!\w)#([\w][\w-]*)/g;
 const HASHTAG_RE = /^#([\w][\w-]*)/;
 
 /** @mention-style references */
-const REFERENCE_RE = /^@([\w][\w./-]*)/;
+export const REFERENCE_INLINE_RE = /(?<!\w)@([\w][\w/-]*(?:\.[\w/-]+)*)/g;
+const REFERENCE_RE = /^@([\w][\w/-]*(?:\.[\w/-]+)*)/;
 
 export const Wikilink = {
   defineNodes: [
@@ -106,6 +108,38 @@ export function findWikilinks(text) {
       to: match.index + match[0].length,
       target,
       label: match[2]?.trim() || target,
+    });
+  }
+  return results;
+}
+
+/** Find all inline hashtags in a string; returns array of { from, to, tag } with local offsets. */
+export function findHashtags(text) {
+  const results = [];
+  HASHTAG_INLINE_RE.lastIndex = 0;
+  let match;
+  while ((match = HASHTAG_INLINE_RE.exec(text)) !== null) {
+    const tag = match[1];
+    results.push({
+      from: match.index,
+      to: match.index + match[0].length,
+      tag,
+    });
+  }
+  return results;
+}
+
+/** Find all @-mentions in a string; returns array of { from, to, reference } with local offsets. */
+export function findReferences(text) {
+  const results = [];
+  REFERENCE_INLINE_RE.lastIndex = 0;
+  let match;
+  while ((match = REFERENCE_INLINE_RE.exec(text)) !== null) {
+    const reference = match[1];
+    results.push({
+      from: match.index,
+      to: match.index + match[0].length,
+      reference,
     });
   }
   return results;
