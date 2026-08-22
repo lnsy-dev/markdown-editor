@@ -33,7 +33,8 @@
     "start": "NODE_ENV=development rspack serve",
     "build": "NODE_ENV=production rspack build",
     "verify:pack": "npm pack --dry-run",
-    "prepublishOnly": "npm run build && npm run verify:pack"
+    "prepublishOnly": "npm run build && npm run verify:pack",
+    "clean:test": "rm -rf test-results screenshots output coverage playwright-report cypress/screenshots cypress/videos"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.19.0",
