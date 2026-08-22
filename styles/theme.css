@@ -803,9 +803,40 @@ cite.cm-blockquote-cite::before {
 }
 
 .cm-chart-widget dataroom-chart,
+dataroom-chart {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: var(--rhythm-sm, 1rem);
+  max-width: 100%;
+}
+
 .cm-network-widget network-visualization {
   display: block;
   max-width: 100%;
+}
+
+.cm-chart-widget dataroom-chart > svg,
+dataroom-chart > svg {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+/* Chart hover aside — match the project's aside styling and keep it to the
+   right of the chart instead of stacking below it. */
+.chart-aside {
+  display: none;
+  flex: 0 0 12rem;
+  max-width: 12rem;
+  padding: var(--rhythm-xs, 0.5rem) var(--rhythm-sm, 1rem);
+  font-family: var(--body-font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  color: var(--fg-color);
+}
+
+.chart-aside.visible {
+  display: block;
 }
 
 /* The network visualization defaults to a 1:1 square, which leaves a lot of
